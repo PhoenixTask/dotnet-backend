@@ -11,7 +11,7 @@
     <PackageVersion Include="MediatR.Contracts" Version="2.0.1" />
     <!-- Application -->
     <PackageVersion Include="FluentValidation.DependencyInjectionExtensions" Version="11.11.0" />
-    <PackageVersion Include="MediatR" Version="12.4.1" />
+    <PackageVersion Include="MediatR" Version="12.5.0" />
     <PackageVersion Include="Microsoft.EntityFrameworkCore" Version="9.0.3" />
     <PackageVersion Include="Microsoft.Extensions.Logging.Abstractions" Version="9.0.4" />
     <PackageVersion Include="Serilog" Version="4.2.0" />
