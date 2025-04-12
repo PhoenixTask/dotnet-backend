@@ -12,7 +12,7 @@ internal sealed class Register : IEndpoint
 
     public void MapEndpoint(IEndpointRouteBuilder app)
     {
-        app.MapPost("users/register", async (Request request, ISender sender, CancellationToken cancellationToken) =>
+        app.MapPost("authentication/create", async (Request request, ISender sender, CancellationToken cancellationToken) =>
         {
             var command = new RegisterUserCommand(
                 request.Username,
