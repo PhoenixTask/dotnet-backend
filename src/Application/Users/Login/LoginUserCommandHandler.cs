@@ -14,20 +14,22 @@ internal sealed class LoginUserCommandHandler(
 {
     public async Task<Result<string>> Handle(LoginUserCommand command, CancellationToken cancellationToken)
     {
+        string normalizedUserName = command.Username.ToUpperInvariant();
+
         User? user = await context.Users
             .AsNoTracking()
-            .SingleOrDefaultAsync(u => u.Email == command.Email, cancellationToken);
+            .SingleOrDefaultAsync(u => u.NormalizedUserName == normalizedUserName, cancellationToken);
 
         if (user is null)
         {
-            return Result.Failure<string>(UserErrors.NotFoundByEmail);
+            return Result.Failure<string>(UserErrors.NotFoundByUserName);
         }
 
         bool verified = passwordHasher.Verify(command.Password, user.PasswordHash);
 
         if (!verified)
         {
-            return Result.Failure<string>(UserErrors.NotFoundByEmail);
+            return Result.Failure<string>(UserErrors.NotFoundByUserName);
         }
 
         string token = tokenProvider.Create(user);
