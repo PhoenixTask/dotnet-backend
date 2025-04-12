@@ -20,7 +20,7 @@ internal sealed class RequestLoggingPipelineBehavior<TRequest, TResponse>(
 
         logger.LogInformation("Processing request {RequestName}", requestName);
 
-        TResponse result = await next();
+        TResponse result = await next(cancellationToken);
 
         if (result.IsSuccess)
         {
