@@ -12,12 +12,14 @@ internal sealed class RegisterUserCommandHandler(IApplicationDbContext context, 
 {
     public async Task<Result<Guid>> Handle(RegisterUserCommand command, CancellationToken cancellationToken)
     {
-        if (await context.Users.AnyAsync(u => u.Email == command.Email, cancellationToken))
+        string email = command.Email.ToLower(System.Globalization.CultureInfo.CurrentCulture);
+        if (await context.Users.AnyAsync(u => u.Email == email, cancellationToken))
         {
             return Result.Failure<Guid>(UserErrors.EmailNotUnique);
         }
 
-        if (await context.Users.AnyAsync(u => u.UserName == command.Username, cancellationToken))
+        string userName = command.Username.ToUpper(System.Globalization.CultureInfo.CurrentCulture);
+        if (await context.Users.AnyAsync(u => u.NormalizedUserName == userName, cancellationToken))
         {
             return Result.Failure<Guid>(UserErrors.UsernameNotUnique);
         }
@@ -25,8 +27,9 @@ internal sealed class RegisterUserCommandHandler(IApplicationDbContext context, 
         var user = new User
         {
             Id = Guid.NewGuid(),
-            Email = command.Email,
+            Email = email,
             UserName = command.Username,
+            NormalizedUserName = userName,
             PasswordHash = passwordHasher.Hash(command.Password)
         };
 
