@@ -399,3 +399,5 @@ FodyWeavers.xsd
 
 .containers/
 /src/Web.Api/PhoenixTask.db
+/src/Web.Api/PhoenixTask.db-shm
+/src/Web.Api/PhoenixTask.db-wal
