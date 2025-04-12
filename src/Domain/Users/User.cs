@@ -13,4 +13,5 @@ public sealed class User : Entity
     public bool IsChangePassword { get; set; }
     public string? PhoneNumber { get; set; }
     public string PasswordHash { get; set; }
+    public string NormalizedUserName { get; set; }
 }
