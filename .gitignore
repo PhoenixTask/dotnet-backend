@@ -398,3 +398,4 @@ FodyWeavers.xsd
 *.sln.iml
 
 .containers/
+/src/Web.Api/PhoenixTask.db
