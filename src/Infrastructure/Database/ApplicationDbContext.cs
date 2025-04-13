@@ -63,16 +63,16 @@ public sealed class ApplicationDbContext(DbContextOptions<ApplicationDbContext> 
 
     private void UpdateBlamableEntities()
     {
-        foreach (EntityEntry<IAuditableEntity> entityEntry in ChangeTracker.Entries<IAuditableEntity>())
+        foreach (EntityEntry<IBlamableEntity> entityEntry in ChangeTracker.Entries<IBlamableEntity>())
         {
             if (entityEntry.State == EntityState.Added)
             {
-                entityEntry.Property(nameof(IBlamableEntity.CreatedBy)).CurrentValue = CurrentUser();
+                entityEntry.Property("CreatedById").CurrentValue = userContext.UserId;
             }
 
             if (entityEntry.State == EntityState.Modified)
             {
-                entityEntry.Property(nameof(IBlamableEntity.ModifiedBy)).CurrentValue = CurrentUser();
+                entityEntry.Property("ModifiedById").CurrentValue = userContext.UserId;
             }
         }
     }
@@ -125,7 +125,7 @@ public sealed class ApplicationDbContext(DbContextOptions<ApplicationDbContext> 
 
             entityEntry.Property(nameof(ISoftDeletableEntity.Deleted)).CurrentValue = true;
 
-            entityEntry.Property(nameof(ISoftDeletableEntity.DeletedBy)).CurrentValue = CurrentUser();
+            entityEntry.Property("DeletedById").CurrentValue = userContext.UserId;
 
             entityEntry.State = EntityState.Modified;
 
@@ -147,9 +147,5 @@ public sealed class ApplicationDbContext(DbContextOptions<ApplicationDbContext> 
                 UpdateDeletedEntityEntryReferencesToUnchanged(referenceEntry.TargetEntry);
             }
         }
-    }
-    private User CurrentUser()
-    {
-        return new User { Id = userContext.UserId };
     }
 }
