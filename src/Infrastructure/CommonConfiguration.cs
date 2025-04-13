@@ -34,28 +34,30 @@ internal abstract class CommonEntityConfiguration<TEntity> : IEntityTypeConfigur
     private static void ConfigureBlamable<T>(EntityTypeBuilder<T> builder)
         where T : class
     {
-        builder.HasOne(x=>((IBlamableEntity)x).CreatedBy)
+        builder.HasOne(x => ((IBlamableEntity)x).CreatedBy)
             .WithMany()
+            .HasForeignKey(x => ((IBlamableEntity)x).CreatedById)
             .OnDelete(DeleteBehavior.Cascade)
             .IsRequired(false);
 
         builder.HasOne(x => ((IBlamableEntity)x).ModifiedBy)
             .WithMany()
+            .HasForeignKey(x => ((IBlamableEntity)x).ModifiedById)
             .OnDelete(DeleteBehavior.Cascade)
             .IsRequired(false);
     }
     private static void ConfigureSoftDelete<T>(EntityTypeBuilder<T> builder)
         where T : class
     {
-        builder.Property(x=> ((ISoftDeletableEntity)x).DeletedOnUtc).IsRequired(false);
+        builder.Property(x => ((ISoftDeletableEntity)x).DeletedOnUtc).IsRequired(false);
 
-        builder.HasOne(x=>((ISoftDeletableEntity)x).DeletedBy)
+        builder.HasOne(x => ((ISoftDeletableEntity)x).DeletedBy)
             .WithMany()
             .OnDelete(DeleteBehavior.Cascade)
             .IsRequired(false);
 
-        builder.Property<bool>(x=>((ISoftDeletableEntity)x).Deleted).HasDefaultValue(false);
+        builder.Property<bool>(x => ((ISoftDeletableEntity)x).Deleted).HasDefaultValue(false);
 
-        builder.HasQueryFilter(x => ((ISoftDeletableEntity)x).Deleted);
+        builder.HasQueryFilter(x => !((ISoftDeletableEntity)x).Deleted);
     }
 }
