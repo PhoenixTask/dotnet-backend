@@ -19,7 +19,9 @@ public sealed class Task : Entity, IAuditableEntity, IBlamableEntity, ISoftDelet
     public DateTime? ModifiedOnUtc { get; }
     public DateTime? DeletedOnUtc { get; }
     public bool Deleted { get; }
-    public User? CreatedBy { get; }
+    public User? CreatedBy { get; set; }
     public User? ModifiedBy { get; }
     public User? DeletedBy { get; }
+    public Guid? CreatedById { get; }
+    public Guid? ModifiedById { get; }
 }

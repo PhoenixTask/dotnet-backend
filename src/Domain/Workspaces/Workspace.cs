@@ -14,7 +14,9 @@ public sealed class Workspace : Entity , ISoftDeletableEntity , IAuditableEntity
     public DateTime? DeletedOnUtc { get; }
     public bool Deleted { get; }
     public User? DeletedBy { get; }
-    public User? CreatedBy { get; }
+    public User? CreatedBy { get; set; }
     public User? ModifiedBy { get; }
+    public Guid? CreatedById { get; }
+    public Guid? ModifiedById { get; }
     public ICollection<Project> Projects { get; set; }
 }

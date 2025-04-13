@@ -13,6 +13,8 @@ public sealed class Invitation : Entity, IAuditableEntity , IBlamableEntity
     public bool IsApproved { get; set; }
     public DateTime? CreatedOnUtc { get; }
     public DateTime? ModifiedOnUtc { get; }
-    public User? CreatedBy { get; }
+    public User? CreatedBy { get; set; }
     public User? ModifiedBy { get; }
+    public Guid? CreatedById { get; }
+    public Guid? ModifiedById { get; }
 }

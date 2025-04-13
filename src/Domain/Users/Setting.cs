@@ -10,6 +10,8 @@ public sealed class Setting :Entity , IAuditableEntity , IBlamableEntity
     public string Value { get; set; }
     public DateTime? CreatedOnUtc { get; }
     public DateTime? ModifiedOnUtc { get; }
-    public User? CreatedBy { get; }
+    public User? CreatedBy { get; set; }
     public User? ModifiedBy { get; }
+    public Guid? CreatedById { get; }
+    public Guid? ModifiedById { get; }
 }
