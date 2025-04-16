@@ -18,6 +18,6 @@ internal sealed class DeleteProjectCommandHandler(
             .Where(x => x.Id == request.ProjectId && x.CreatedById == userId)
             .ExecuteDeleteAsync(cancellationToken);
 
-        return countDeleted > 0 ? Result.Success() : Result.Failure(ProjectErrors.NotFound(request.ProjectId))
+        return countDeleted > 0 ? Result.Success() : Result.Failure(ProjectErrors.NotFound(request.ProjectId));
     }
 }
