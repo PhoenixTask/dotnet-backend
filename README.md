@@ -1,36 +1,46 @@
-# Clean Architecture Template
 
-What's included in the template?
+# PhoenixTask API
 
-- SharedKernel project with common Domain-Driven Design abstractions.
-- Domain layer with sample entities.
-- Application layer with abstractions for:
-  - CQRS
-  - Example use cases
-  - Cross-cutting concerns (logging, validation)
-- Infrastructure layer with:
-  - Authentication
-  - Permission authorization
-  - EF Core, PostgreSQL
-  - Serilog
-- Seq for searching and analyzing structured logs
-  - Seq is available at http://localhost:8081 by default
-- Testing projects
-  - Architecture testing
+a simple project management system 
 
-I'm open to hearing your feedback about the template and what you'd like to see in future iterations.
 
-If you're ready to learn more, check out [**Pragmatic Clean Architecture**](https://www.milanjovanovic.tech/pragmatic-clean-architecture?utm_source=ca-template):
+## Run Locally
 
-- Domain-Driven Design
-- Role-based authorization
-- Permission-based authorization
-- Distributed caching with Redis
-- OpenTelemetry
-- Outbox pattern
-- API Versioning
-- Unit testing
-- Functional testing
-- Integration testing
+Clone the project
 
-Stay awesome!
+```bash
+  git clone https://github.com/ErfanMelon/PhoenixTaskApi.git
+```
+
+Go to the project directory
+
+```bash
+  cd PhoenixTaskApi
+```
+
+Build project
+
+```bash
+  dotnet build .\PhoenixTask.sln
+```
+Go To Web Folder
+```bash
+  cd .\src\WebApi\
+```
+
+Start the server
+
+```bash
+  dotnet run
+```
+## Documentation
+
+To view requests please goto swagger page 👇
+
+[Documentation](https://localhost:5001/swagger/index.html)
+
+
+## Support
+
+For support, email ErfanMelon@outlook.com .
+
