@@ -6,4 +6,5 @@ public static class Tags
     public const string Workspaces = "Workspaces";
     public const string Projects = "Projects";
     public const string Boards = "Boards";
+    public const string Tasks = "Tasks";
 }
