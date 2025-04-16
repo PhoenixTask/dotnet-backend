@@ -20,6 +20,16 @@ builder.Services
 
 builder.Services.AddEndpoints(Assembly.GetExecutingAssembly());
 
+string frontAddress = builder.Configuration.GetSection("FrontEnd")
+    .GetValue("Address", "http://localhost:3000");
+
+builder.Services.AddCors(options =>
+    options.AddPolicy("AllowFrontEndServer", policy =>
+    policy.WithOrigins(frontAddress)
+    .AllowAnyHeader()
+    .AllowAnyMethod()
+));
+
 WebApplication app = builder.Build();
 
 app.MapEndpoints();
@@ -48,6 +58,8 @@ app.UseAuthorization();
 
 // REMARK: If you want to use Controllers, you'll need this.
 app.MapControllers();
+
+app.UseCors("AllowFrontEndServer");
 
 await app.RunAsync();
 
