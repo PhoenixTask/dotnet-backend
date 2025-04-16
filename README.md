@@ -3,6 +3,9 @@
 
 a simple project management system 
 
+this is the backEnd api of PhoneixTask project which divided into two part
+
+see front repository [here](https://github.com/AMN2080/PhoenixTask/tree/FrontEnd) ! 
 
 ## Run Locally
 
