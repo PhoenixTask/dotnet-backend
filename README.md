@@ -28,7 +28,7 @@ Build project
 ```
 Go To Web Folder
 ```bash
-  cd .\src\WebApi\
+  cd .\src\Web.Api\
 ```
 
 Start the server
@@ -40,7 +40,7 @@ Start the server
 
 To view requests please goto swagger page 👇
 
-[Documentation](https://localhost:5001/swagger/index.html)
+[Documentation](http://localhost:5000/swagger/index.html)
 
 
 ## Support
