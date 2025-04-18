@@ -74,6 +74,11 @@ public static class DependencyInjection
                     ValidAudience = configuration["Jwt:Audience"],
                     ClockSkew = TimeSpan.Zero
                 };
+            })
+            .AddCookie(o =>
+            {
+                o.Cookie.HttpOnly = true;
+                o.ExpireTimeSpan = TimeSpan.FromMinutes(10);
             });
 
         services.AddHttpContextAccessor();
