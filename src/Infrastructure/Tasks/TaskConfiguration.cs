@@ -12,6 +12,12 @@ internal sealed class TaskConfiguration : CommonEntityConfiguration<Task>
             .WithMany()
             .IsRequired();
 
+        builder.Property(t => t.Attachment)
+            .IsRequired(false);
+
+        builder.Property(t => t.Thumbnail)
+            .IsRequired(false);
+
         base.Configure(builder);
     }
 }
