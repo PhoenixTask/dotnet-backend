@@ -5,7 +5,7 @@ a simple project management system
 
 this is the backEnd api of PhoneixTask project which divided into two part
 
-see front repository [here](https://github.com/AMN2080/PhoenixTask/tree/FrontEnd) ! 
+see front repository [here](https://github.com/AMN2080/PhoenixTask) ! 
 
 ## Run Locally
 
@@ -28,7 +28,7 @@ Build project
 ```
 Go To Web Folder
 ```bash
-  cd .\src\WebApi\
+  cd .\src\Web.Api\
 ```
 
 Start the server
@@ -40,7 +40,7 @@ Start the server
 
 To view requests please goto swagger page 👇
 
-[Documentation](https://localhost:5001/swagger/index.html)
+[Documentation](http://localhost:5000/swagger/index.html)
 
 
 ## Support
