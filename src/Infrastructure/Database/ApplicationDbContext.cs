@@ -26,6 +26,7 @@ public sealed class ApplicationDbContext(DbContextOptions<ApplicationDbContext> 
     public DbSet<Domain.Tasks.Task> Tasks { get; set; }
     public DbSet<Invitation> Invitations { get; set; }
     public DbSet<Setting> Settings { get; set; }
+    public DbSet<TeamMember> Members { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
