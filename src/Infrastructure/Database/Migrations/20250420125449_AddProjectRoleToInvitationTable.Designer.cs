@@ -3,6 +3,7 @@ using System;
 using Infrastructure.Database;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Infrastructure.Database.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250420125449_AddProjectRoleToInvitationTable")]
+    partial class AddProjectRoleToInvitationTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -226,54 +229,6 @@ namespace Infrastructure.Database.Migrations
                         .HasDatabaseName("ix_invitations_workspace_id");
 
                     b.ToTable("invitations", "public");
-                });
-
-            modelBuilder.Entity("Domain.Subscriptions.TeamMember", b =>
-                {
-                    b.Property<Guid>("UserId")
-                        .HasColumnType("TEXT")
-                        .HasColumnName("user_id");
-
-                    b.Property<Guid>("WorkspaceId")
-                        .HasColumnType("TEXT")
-                        .HasColumnName("workspace_id");
-
-                    b.Property<DateTime?>("CreatedOnUtc")
-                        .HasColumnType("TEXT")
-                        .HasColumnName("created_on_utc");
-
-                    b.Property<bool>("Deleted")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER")
-                        .HasDefaultValue(false)
-                        .HasColumnName("deleted");
-
-                    b.Property<Guid?>("DeletedById")
-                        .HasColumnType("TEXT")
-                        .HasColumnName("deleted_by_id");
-
-                    b.Property<DateTime?>("DeletedOnUtc")
-                        .HasColumnType("TEXT")
-                        .HasColumnName("deleted_on_utc");
-
-                    b.Property<DateTime?>("ModifiedOnUtc")
-                        .HasColumnType("TEXT")
-                        .HasColumnName("modified_on_utc");
-
-                    b.Property<int>("Role")
-                        .HasColumnType("INTEGER")
-                        .HasColumnName("role");
-
-                    b.HasKey("UserId", "WorkspaceId")
-                        .HasName("pk_members");
-
-                    b.HasIndex("DeletedById")
-                        .HasDatabaseName("ix_members_deleted_by_id");
-
-                    b.HasIndex("WorkspaceId")
-                        .HasDatabaseName("ix_members_workspace_id");
-
-                    b.ToTable("members", "public");
                 });
 
             modelBuilder.Entity("Domain.Tasks.Task", b =>
@@ -640,35 +595,6 @@ namespace Infrastructure.Database.Migrations
                     b.Navigation("Invited");
 
                     b.Navigation("ModifiedBy");
-
-                    b.Navigation("Workspace");
-                });
-
-            modelBuilder.Entity("Domain.Subscriptions.TeamMember", b =>
-                {
-                    b.HasOne("Domain.Users.User", "DeletedBy")
-                        .WithMany()
-                        .HasForeignKey("DeletedById")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .HasConstraintName("fk_members_users_deleted_by_id");
-
-                    b.HasOne("Domain.Users.User", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired()
-                        .HasConstraintName("fk_members_users_user_id");
-
-                    b.HasOne("Domain.Workspaces.Workspace", "Workspace")
-                        .WithMany()
-                        .HasForeignKey("WorkspaceId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired()
-                        .HasConstraintName("fk_members_workspaces_workspace_id");
-
-                    b.Navigation("DeletedBy");
-
-                    b.Navigation("User");
 
                     b.Navigation("Workspace");
                 });
