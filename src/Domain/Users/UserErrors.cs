@@ -27,4 +27,8 @@ public static class UserErrors
     public static readonly Error UsernameNotUnique = Error.Conflict(
         "Users.UsernameNotUnique",
         "The provided username is not unique");
+
+    public static readonly Error SettingNotFound = Error.NotFound(
+        "Users.SettingNotFound",
+        "The setting with specified key was not found");
 }
