@@ -17,5 +17,6 @@ public interface IApplicationDbContext
     DbSet<Task> Tasks { get; }
     DbSet<Invitation> Invitations { get; }
     DbSet<Setting> Settings{ get; }
+    DbSet<TeamMember> Members{ get; }
     Task<int> SaveChangesAsync(CancellationToken cancellationToken = default);
 }
