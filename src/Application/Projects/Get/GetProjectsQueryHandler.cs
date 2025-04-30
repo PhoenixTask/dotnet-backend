@@ -17,8 +17,6 @@ internal sealed class GetProjectsQueryHandler(
         return await context.Projects
             .AsNoTracking()
             .Where(x => x.Workspace.Id == request.WorkspaceId && x.CreatedById == userId)
-            .Skip((request.Page - 1) * request.PageSize)
-            .Take(request.PageSize)
             .Select(x => new ProjectResponse
             {
                 Id = x.Id,
