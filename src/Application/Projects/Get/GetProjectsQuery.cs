@@ -2,4 +2,4 @@
 
 namespace Application.Projects.Get;
 
-public sealed record GetProjectsQuery(int Page , int PageSize,Guid WorkspaceId) : IQuery<List<ProjectResponse>>;
+public sealed record GetProjectsQuery(Guid WorkspaceId) : IQuery<List<ProjectResponse>>;
