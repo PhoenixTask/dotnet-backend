@@ -20,8 +20,6 @@ internal sealed class GetWorkspacesQueryHandler(IApplicationDbContext context, I
                 Name = x.Name,
                 Color = x.Color,
             })
-            .Skip((request.Page -1) * request.PageSize)
-            .Take(request.PageSize)
             .ToListAsync(cancellationToken);
     }
 }
