@@ -16,8 +16,6 @@ internal sealed class GetBoardsQueryHandler(
         return await context.Boards
             .AsNoTracking()
             .Where(x => x.Project.Id == request.ProjectId && x.CreatedById == userId)
-            .Skip((request.Page - 1) * request.PageSize)
-            .Take(request.PageSize)
             .Select(x => new BoardResponse
             {
                 Id = x.Id,
