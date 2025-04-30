@@ -10,12 +10,9 @@ internal sealed class Get : IEndpoint
 {
     public void MapEndpoint(IEndpointRouteBuilder app)
     {
-        app.MapGet("workspace/{workspaceId}/project/{page}/{pageSize}", async (Guid workspaceId,ISender sender, CancellationToken cancellationToken, int page = 1, int pageSize = 1000) =>
+        app.MapGet("workspace/{workspaceId}/project", async (Guid workspaceId,ISender sender, CancellationToken cancellationToken) =>
         {
-            var command = new GetProjectsQuery(
-                page,
-                pageSize,
-                workspaceId);
+            var command = new GetProjectsQuery(workspaceId);
 
             Result<List<ProjectResponse>> result = await sender.Send(command, cancellationToken);
 
