@@ -8,9 +8,9 @@ using SharedKernel;
 namespace Application.Workspaces.Update;
 
 internal sealed class UpdateWorkspaceCommandHandler(IApplicationDbContext context, IUserContext userContext)
-    : ICommandHandler<UpdateWorkspaceCommand, Result>
+    : ICommandHandler<UpdateWorkspaceCommand>
 {
-    public async Task<Result<Result>> Handle(UpdateWorkspaceCommand request, CancellationToken cancellationToken)
+    public async Task<Result> Handle(UpdateWorkspaceCommand request, CancellationToken cancellationToken)
     {
         Domain.Workspaces.Workspace? workspace = await context.Workspaces
             .FirstOrDefaultAsync(x => x.Id == request.Id && x.CreatedBy == new Domain.Users.User { Id = userContext.UserId }, cancellationToken);
