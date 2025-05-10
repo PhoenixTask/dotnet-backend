@@ -31,4 +31,8 @@ public static class UserErrors
     public static readonly Error SettingNotFound = Error.NotFound(
         "Users.SettingNotFound",
         "The setting with specified key was not found");
+
+    public static readonly Error InvalidPermission = Error.Problem(
+        "Users.InvalidPermission",
+        "You are not authorized to perform this action");
 }
