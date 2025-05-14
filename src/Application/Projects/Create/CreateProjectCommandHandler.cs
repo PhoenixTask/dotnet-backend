@@ -33,7 +33,8 @@ internal sealed class CreateProjectCommandHandler
         var project = new Project
         {
             Name = request.Name.Trim(),
-            Workspace = workspace
+            Workspace = workspace,
+            Color = request.Color
         };
         await context.Projects.AddAsync(project, cancellationToken);
         await context.SaveChangesAsync(cancellationToken);
