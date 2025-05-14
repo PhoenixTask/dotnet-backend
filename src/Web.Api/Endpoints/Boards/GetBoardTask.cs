@@ -10,7 +10,7 @@ internal sealed class GetBoardTask : IEndpoint
 {
     public void MapEndpoint(IEndpointRouteBuilder app)
     {
-        app.MapGet("project/{projectId}/get-board-task", async (Guid projectId, int page, int pageSize, ISender sender, CancellationToken cancellationToken) =>
+        app.MapGet("project/{projectId}/get-board-task", async (Guid projectId, ISender sender, CancellationToken cancellationToken, int page = 1, int pageSize = 20) =>
         {
             var command = new GetBoardTaskQuery(projectId, page, pageSize);
 
