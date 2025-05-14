@@ -2,4 +2,4 @@
 
 namespace Application.Projects.Create;
 
-public sealed record CreateProjectCommand(string Name, Guid WorkspaceId) : ICommand<Guid>;
+public sealed record CreateProjectCommand(string Name,string Color, Guid WorkspaceId) : ICommand<Guid>;
