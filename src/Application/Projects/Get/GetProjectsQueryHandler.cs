@@ -20,7 +20,8 @@ internal sealed class GetProjectsQueryHandler(
             .Select(x => new ProjectResponse
             {
                 Id = x.Id,
-                Name = x.Name
+                Name = x.Name,
+                Color = x.Color
             }).ToListAsync(cancellationToken);
     }
 }
