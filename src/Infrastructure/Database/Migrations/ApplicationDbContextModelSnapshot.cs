@@ -17,7 +17,7 @@ namespace Infrastructure.Database.Migrations
 #pragma warning disable 612, 618
             modelBuilder
                 .HasDefaultSchema("public")
-                .HasAnnotation("ProductVersion", "9.0.4");
+                .HasAnnotation("ProductVersion", "9.0.5");
 
             modelBuilder.Entity("Domain.Projects.Board", b =>
                 {
@@ -102,6 +102,11 @@ namespace Infrastructure.Database.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("TEXT")
                         .HasColumnName("id");
+
+                    b.Property<string>("Color")
+                        .IsRequired()
+                        .HasColumnType("TEXT")
+                        .HasColumnName("color");
 
                     b.Property<Guid?>("CreatedById")
                         .HasColumnType("TEXT")
@@ -676,7 +681,7 @@ namespace Infrastructure.Database.Migrations
             modelBuilder.Entity("Domain.Tasks.Task", b =>
                 {
                     b.HasOne("Domain.Projects.Board", "Board")
-                        .WithMany()
+                        .WithMany("Tasks")
                         .HasForeignKey("BoardId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired()
@@ -753,6 +758,11 @@ namespace Infrastructure.Database.Migrations
                     b.Navigation("DeletedBy");
 
                     b.Navigation("ModifiedBy");
+                });
+
+            modelBuilder.Entity("Domain.Projects.Board", b =>
+                {
+                    b.Navigation("Tasks");
                 });
 
             modelBuilder.Entity("Domain.Projects.Project", b =>
