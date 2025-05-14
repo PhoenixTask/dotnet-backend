@@ -9,6 +9,7 @@ public sealed class Project : Entity, IAuditableEntity, IBlamableEntity, ISoftDe
 {
     public Guid Id { get; set; }
     public string Name { get; set; }
+    public string Color { get; set; }
     public Workspace Workspace { get; set; }
     public DateTime? CreatedOnUtc { get; }
     public DateTime? ModifiedOnUtc { get; }
