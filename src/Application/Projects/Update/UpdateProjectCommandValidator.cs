@@ -8,5 +8,6 @@ internal sealed class UpdateProjectCommandValidator : AbstractValidator<UpdatePr
     {
         RuleFor(x => x.Name).NotEmpty();
         RuleFor(x => x.ProjectId).NotEmpty();
+        RuleFor(x=> x.Color).NotEmpty();
     }
 }
