@@ -1,15 +1,18 @@
 ﻿using Application.Abstractions.Authentication;
 using Application.Abstractions.Data;
 using Application.Abstractions.Messaging;
+using Application.Users.AccessAction;
 using Domain.Projects;
+using Domain.Subscriptions;
 using Domain.Workspaces;
+using MediatR;
 using Microsoft.EntityFrameworkCore;
 using SharedKernel;
 
 namespace Application.Projects.Create;
 
 internal sealed class CreateProjectCommandHandler
-    (IApplicationDbContext context, IUserContext userContext) : ICommandHandler<CreateProjectCommand, Guid>
+    (IApplicationDbContext context, IUserContext userContext,ISender sender) : ICommandHandler<CreateProjectCommand, Guid>
 {
     public async Task<Result<Guid>> Handle(CreateProjectCommand request, CancellationToken cancellationToken)
     {
@@ -20,11 +23,11 @@ internal sealed class CreateProjectCommandHandler
             return Result.Failure<Guid>(WorkspaceErrors.NotFound(request.WorkspaceId));
         }
 
-        //TODO: Check user can add project
-        Guid userId = userContext.UserId;
-        if (workspace.CreatedById != userId)
+        UserAccessCommand accessRequest = new(userContext.UserId, workspace.Id, typeof(Workspace), ProjectRole.Manager);
+        Result accessResult = await sender.Send(accessRequest, cancellationToken);
+        if (accessResult.IsFailure)
         {
-            return Result.Failure<Guid>(WorkspaceErrors.NotFound(request.WorkspaceId));
+            return Result.Failure<Guid>(accessResult.Error);
         }
 
         var project = new Project
