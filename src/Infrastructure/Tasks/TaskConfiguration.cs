@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore.Metadata.Builders;
+﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Task = Domain.Tasks.Task;
 
 namespace Infrastructure.Tasks;
@@ -17,6 +18,11 @@ internal sealed class TaskConfiguration : CommonEntityConfiguration<Task>
 
         builder.Property(t => t.Thumbnail)
             .IsRequired(false);
+
+        builder.HasOne(x => x.Board)
+            .WithMany(x => x.Tasks)
+            .HasForeignKey(t => t.BoardId)
+            .OnDelete(DeleteBehavior.Cascade);
 
         base.Configure(builder);
     }
