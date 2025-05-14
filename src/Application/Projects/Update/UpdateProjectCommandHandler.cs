@@ -22,6 +22,7 @@ internal sealed class UpdateProjectCommandHandler(
         }
 
         project.Name = request.Name;
+        project.Color = request.Color;
         await context.SaveChangesAsync(cancellationToken);
         
         return Result.Success();
