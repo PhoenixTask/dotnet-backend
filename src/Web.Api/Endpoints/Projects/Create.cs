@@ -8,13 +8,14 @@ namespace Web.Api.Endpoints.Projects;
 
 internal sealed class Create : IEndpoint
 {
-    public sealed record Request(string Name,Guid WorkspaceId);
+    public sealed record Request(string Name,string Color,Guid WorkspaceId);
     public void MapEndpoint(IEndpointRouteBuilder app)
     {
         app.MapPost("project/create/", async (Request request, ISender sender, CancellationToken cancellationToken) =>
         {
             var command = new CreateProjectCommand(
                 request.Name,
+                request.Color,
                 request.WorkspaceId);
 
             Result<Guid> result = await sender.Send(command, cancellationToken);
