@@ -15,6 +15,7 @@ public sealed class Task : Entity, IAuditableEntity, IBlamableEntity, ISoftDelet
     public int Priority { get; set; }
     public int Order { get; set; }
     public Board Board { get; set; }
+    public Guid BoardId { get; set; }
     public DateTime? CreatedOnUtc { get; }
     public DateTime? ModifiedOnUtc { get; }
     public DateTime? DeletedOnUtc { get; }
