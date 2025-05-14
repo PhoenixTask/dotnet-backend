@@ -8,5 +8,6 @@ internal sealed class CreateProjectCommandValidator : AbstractValidator<CreatePr
     {
         RuleFor(x => x.Name).NotEmpty();
         RuleFor(x => x.WorkspaceId).NotEmpty();
+        RuleFor(x=>x.Color).NotEmpty();
     }
 }
