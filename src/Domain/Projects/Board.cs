@@ -20,4 +20,5 @@ public sealed class Board : Entity , IAuditableEntity,IBlamableEntity, ISoftDele
     public User? DeletedBy { get; }
     public Guid? CreatedById { get; }
     public Guid? ModifiedById { get; }
+    public ICollection<Tasks.Task> Tasks { get; set; }
 }
