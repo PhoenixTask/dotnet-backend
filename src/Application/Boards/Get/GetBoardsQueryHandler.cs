@@ -21,7 +21,8 @@ internal sealed class GetBoardsQueryHandler(
                 Id = x.Id,
                 Name = x.Name,
                 Color = x.Color,
-                IsArchive = x.IsArchive
+                IsArchive = x.IsArchive,
+                Order = x.Order,
             }).ToListAsync(cancellationToken);
     }
 }
