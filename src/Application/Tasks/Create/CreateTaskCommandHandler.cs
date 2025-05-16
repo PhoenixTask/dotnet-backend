@@ -22,7 +22,7 @@ internal sealed class CreateTaskCommandHandler(
             return Result.Failure<Guid>(BoardErrors.NotFound(request.BoardId));
         }
 
-        var deadLine = DateOnly.FromDateTime(request.DeadLine);
+        DateOnly? deadLine =DateOnly.FromDateTime(request.DeadLine.GetValueOrDefault());
 
         var task = new Task
         {
