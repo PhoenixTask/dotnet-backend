@@ -19,7 +19,7 @@ internal sealed class GetTasksQueryHandler(IApplicationDbContext context, IUserC
             .Select(x => new TaskResponse
             {
                 Id = x.Id,
-                DeadLine = x.DeadLine.ToString(new CultureInfo("en-US")),
+                DeadLine = x.DeadLine.GetValueOrDefault().ToString(new CultureInfo("en-US")),
                 Description = x.Description,
                 Name = x.Name,
                 Order = x.Order,
