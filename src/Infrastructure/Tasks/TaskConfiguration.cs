@@ -19,6 +19,9 @@ internal sealed class TaskConfiguration : CommonEntityConfiguration<Task>
         builder.Property(t => t.Thumbnail)
             .IsRequired(false);
 
+        builder.Property(t=>t.DeadLine)
+            .IsRequired(false);
+
         builder.HasOne(x => x.Board)
             .WithMany(x => x.Tasks)
             .HasForeignKey(t => t.BoardId)
