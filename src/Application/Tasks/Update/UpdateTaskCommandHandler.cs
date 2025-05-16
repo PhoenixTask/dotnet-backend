@@ -31,7 +31,7 @@ internal sealed class UpdateTaskCommandHandler
 
         task.Priority = request.Priority;
         task.Board = board;
-        task.DeadLine = DateOnly.FromDateTime(request.DeadLine);
+        task.DeadLine = DateOnly.FromDateTime(request.DeadLine.GetValueOrDefault());
         task.Description = request.Description;
         task.Name = request.Name;
         task.Order = request.Order;
