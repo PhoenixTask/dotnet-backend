@@ -304,7 +304,7 @@ namespace Infrastructure.Database.Migrations
                         .HasColumnType("TEXT")
                         .HasColumnName("created_on_utc");
 
-                    b.Property<DateOnly>("DeadLine")
+                    b.Property<DateOnly?>("DeadLine")
                         .HasColumnType("TEXT")
                         .HasColumnName("dead_line");
 
