@@ -9,7 +9,7 @@ public sealed class Task : Entity, IAuditableEntity, IBlamableEntity, ISoftDelet
     public Guid Id { get; set; }
     public string Name { get; set; }
     public string Description { get; set; }
-    public DateOnly DeadLine { get; set; }
+    public DateOnly? DeadLine { get; set; }
     public string Attachment { get; set; }
     public string Thumbnail { get; set; }
     public int Priority { get; set; }
