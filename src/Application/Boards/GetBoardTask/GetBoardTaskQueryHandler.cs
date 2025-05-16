@@ -50,7 +50,7 @@ internal sealed class GetBoardTaskQueryHandler(IApplicationDbContext context,IUs
         return x.Tasks.Select(t => new TaskResponse
         {
             Id = t.Id,
-            DeadLine = t.DeadLine.ToString(new CultureInfo("en-US")),
+            DeadLine = t.DeadLine.GetValueOrDefault().ToString(new CultureInfo("en-US")),
             Description = t.Description,
             Name = t.Name,
             Order = t.Order,
