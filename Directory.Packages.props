@@ -8,7 +8,7 @@
     <PackageVersion Include="Microsoft.EntityFrameworkCore.Sqlite" Version="9.0.5" />
     <PackageVersion Include="MockQueryable.NSubstitute" Version="7.0.3" />
     <PackageVersion Include="NSubstitute" Version="5.3.0" />
-    <PackageVersion Include="SonarAnalyzer.CSharp" Version="10.9.0.115408" />
+    <PackageVersion Include="SonarAnalyzer.CSharp" Version="10.10.0.116381" />
     <!-- SharedKernel -->
     <PackageVersion Include="MediatR.Contracts" Version="2.0.1" />
     <!-- Application -->
@@ -16,7 +16,7 @@
     <PackageVersion Include="MediatR" Version="12.5.0" />
     <PackageVersion Include="Microsoft.EntityFrameworkCore" Version="9.0.5" />
     <PackageVersion Include="Microsoft.Extensions.Logging.Abstractions" Version="9.0.5" />
-    <PackageVersion Include="Serilog" Version="4.2.0" />
+    <PackageVersion Include="Serilog" Version="4.3.0" />
     <!-- Infrastructure -->
     <PackageVersion Include="AspNetCore.HealthChecks.NpgSql" Version="9.0.0" />
     <PackageVersion Include="EFCore.NamingConventions" Version="9.0.0" />
