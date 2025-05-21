@@ -11,23 +11,26 @@ jobs:
       - name: Send email notification
         uses: dawidd6/action-send-mail@v3
         with:
-          # SMTP Configuration (using Gmail as example)
+          # SMTP Configuration
           server_address: smtp.gmail.com
           server_port: 465
           username: ${{ secrets.MAIL_USERNAME }}
           password: ${{ secrets.MAIL_PASSWORD }}
           
           # Email details
-          subject: "🚀 New Commit to Main: ${{ github.event.head_commit.message }}"
+          subject: "📌 New Commit to Main"
           to: ErfanMelon@outlook.com
-          from: PhoneixTaskApi  # Sets sender name
-          content_type: text/html  # Enables HTML formatting
+          from: PhoneixTaskApi
+          content_type: text/plain
           body: |
-            <h3>A new commit was pushed to the <code>main</code> branch:</h3>
-            <p><strong>Repository:</strong> ${{ github.repository }}</p>
-            <p><strong>Commit Message:</strong> ${{ github.event.head_commit.message }}</p>
-            <p><strong>Author:</strong> ${{ github.event.head_commit.author.name }}</p>
-            <p><strong>Commit SHA:</strong> <code>${{ github.sha }}</code></p>
-            <p><strong>Compare Changes:</strong> <a href="${{ github.event.compare }}">View Diff</a></p>
-            <hr>
-            <p>Triggered by GitHub Actions at ${{ github.event.head_commit.timestamp }}</p>
+            🚀 A new commit was pushed to the main branch! 🎉
+
+            📂 Repository: ${{ github.repository }}
+            ✉️ Commit Message: ${{ github.event.head_commit.message }}
+            👤 Author: ${{ github.event.head_commit.author.name }}
+            🔑 Commit SHA: ${{ github.sha }}
+            🔍 Compare Changes: ${{ github.event.compare }}
+            ⏰ Timestamp: ${{ github.event.head_commit.timestamp }}
+
+            🌟 Happy coding! 
+            🔄 Triggered automatically by GitHub Actions
