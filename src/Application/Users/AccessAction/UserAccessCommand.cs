@@ -20,7 +20,7 @@ internal sealed class UserAccessCommandHandler(IApplicationDbContext context) : 
             Type type when type == typeof(Workspace) => await HasWorkspaceAccess(request.UserId, request.ModelId, cancellationToken),
             Type type when type == typeof(Project) => await HasAccessToProject(request.UserId, request.ModelId, cancellationToken),
             Type type when type == typeof(Board) => await HasAccessToBoard(request.UserId, request.ModelId, cancellationToken),
-            Type type when type == typeof(Task) => await HasAccessToTask(request.UserId, request.ModelId, cancellationToken),
+            Type type when type == typeof(Domain.Tasks.Task) => await HasAccessToTask(request.UserId, request.ModelId, cancellationToken),
             _ => false
         };
         return result ? Result.Success() : Result.Failure(UserErrors.InvalidPermission);
