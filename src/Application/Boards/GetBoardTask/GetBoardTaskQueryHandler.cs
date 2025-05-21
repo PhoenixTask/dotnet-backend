@@ -54,7 +54,8 @@ internal sealed class GetBoardTaskQueryHandler(IApplicationDbContext context,IUs
             Description = t.Description,
             Name = t.Name,
             Order = t.Order,
-            Priority = t.Priority
+            Priority = t.Priority,
+            IsComplete = t.IsComplete
         }).Take(5).ToList();
     }
 }

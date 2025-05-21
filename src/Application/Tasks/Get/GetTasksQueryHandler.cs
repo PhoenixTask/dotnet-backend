@@ -23,7 +23,8 @@ internal sealed class GetTasksQueryHandler(IApplicationDbContext context, IUserC
                 Description = x.Description,
                 Name = x.Name,
                 Order = x.Order,
-                Priority = x.Priority
+                Priority = x.Priority,
+                IsComplete = x.IsComplete
             }).ToListAsync(cancellationToken);
     }
 }
