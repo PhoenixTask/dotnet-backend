@@ -25,4 +25,5 @@ public sealed class Task : Entity, IAuditableEntity, IBlamableEntity, ISoftDelet
     public User? DeletedBy { get; }
     public Guid? CreatedById { get; }
     public Guid? ModifiedById { get; }
+    public bool IsComplete { get; set; }
 }
