@@ -8,7 +8,6 @@ internal abstract class CommonEntityConfiguration<TEntity> : IEntityTypeConfigur
 {
     public virtual void Configure(EntityTypeBuilder<TEntity> builder)
     {
-        Console.WriteLine(typeof(TEntity).Name);
         if (typeof(IAuditableEntity).IsAssignableFrom(typeof(TEntity)))
         {
             ConfigureAuditable(builder);
