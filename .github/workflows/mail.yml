@@ -8,19 +8,26 @@ jobs:
   send-email:
     runs-on: ubuntu-latest
     steps:
-      - name: Send email
+      - name: Send email notification
         uses: dawidd6/action-send-mail@v3
         with:
+          # SMTP Configuration (using Gmail as example)
           server_address: smtp.gmail.com
           server_port: 465
           username: ${{ secrets.MAIL_USERNAME }}
           password: ${{ secrets.MAIL_PASSWORD }}
-          subject: New commit pushed to main branch
-          body: |
-            A new commit has been pushed to the main branch.
-            Repository: ${{ github.repository }}
-            Commit SHA: ${{ github.sha }}
-            Compare: ${{ github.event.compare }}
+          
+          # Email details
+          subject: "🚀 New Commit to Main: ${{ github.event.head_commit.message }}"
           to: ErfanMelon@outlook.com
-          from: ${{ secrets.MAIL_USERNAME }}
-          content_type: text/plain
+          from: PhoneixTaskApi  # Sets sender name
+          content_type: text/html  # Enables HTML formatting
+          body: |
+            <h3>A new commit was pushed to the <code>main</code> branch:</h3>
+            <p><strong>Repository:</strong> ${{ github.repository }}</p>
+            <p><strong>Commit Message:</strong> ${{ github.event.head_commit.message }}</p>
+            <p><strong>Author:</strong> ${{ github.event.head_commit.author.name }}</p>
+            <p><strong>Commit SHA:</strong> <code>${{ github.sha }}</code></p>
+            <p><strong>Compare Changes:</strong> <a href="${{ github.event.compare }}">View Diff</a></p>
+            <hr>
+            <p>Triggered by GitHub Actions at ${{ github.event.head_commit.timestamp }}</p>
