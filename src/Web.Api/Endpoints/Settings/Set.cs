@@ -22,6 +22,6 @@ internal sealed class Set : IEndpoint
             return result.Match(Results.NoContent, CustomResults.Problem);
         })
         .RequireAuthorization()
-        .WithTags(Tags.Workspaces);
+        .WithTags(Tags.Settings);
     }
 }
