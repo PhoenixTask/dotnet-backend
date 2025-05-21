@@ -27,6 +27,10 @@ internal sealed class TaskConfiguration : CommonEntityConfiguration<Task>
             .HasForeignKey(t => t.BoardId)
             .OnDelete(DeleteBehavior.Cascade);
 
+        builder.Property(x => x.IsComplete)
+            .IsRequired()
+            .HasDefaultValue(false);
+
         base.Configure(builder);
     }
 }
