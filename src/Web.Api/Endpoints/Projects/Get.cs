@@ -12,9 +12,9 @@ internal sealed class Get : IEndpoint
     {
         app.MapGet("workspace/{workspaceId}/project", async (Guid workspaceId,ISender sender, CancellationToken cancellationToken) =>
         {
-            var command = new GetProjectsQuery(workspaceId);
+            var query = new GetProjectsQuery(workspaceId);
 
-            Result<List<ProjectResponse>> result = await sender.Send(command, cancellationToken);
+            Result<List<ProjectResponse>> result = await sender.Send(query, cancellationToken);
 
             return result.Match(Results.Ok, CustomResults.Problem);
         })
