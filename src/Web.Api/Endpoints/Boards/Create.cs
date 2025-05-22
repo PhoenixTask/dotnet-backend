@@ -11,7 +11,7 @@ internal sealed class Create : IEndpoint
     public sealed record Request(Guid ProjectId, string Name, string Color, int Order);
     public void MapEndpoint(IEndpointRouteBuilder app)
     {
-        app.MapPost("board/create/", async (Request request, ISender sender, CancellationToken cancellationToken) =>
+        app.MapPost("board/", async (Request request, ISender sender, CancellationToken cancellationToken) =>
         {
             var command = new CreateBoardCommand(
                 request.ProjectId,
