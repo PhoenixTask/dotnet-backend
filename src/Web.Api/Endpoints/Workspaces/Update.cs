@@ -12,7 +12,7 @@ internal sealed class Update : IEndpoint
     public sealed record Request(string Name,string Color);
     public void MapEndpoint(IEndpointRouteBuilder app)
     {
-        app.MapPut("workspace/update/{Id}", async (Guid Id , Request request ,ISender sender, CancellationToken cancellationToken) =>
+        app.MapPut("workspace/{Id}", async (Guid Id , Request request ,ISender sender, CancellationToken cancellationToken) =>
         {
             var command = new UpdateWorkspaceCommand(
                 Id,
