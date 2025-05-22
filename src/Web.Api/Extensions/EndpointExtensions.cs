@@ -1,4 +1,6 @@
 ﻿using System.Reflection;
+using Asp.Versioning.Builder;
+using Asp.Versioning;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Web.Api.Endpoints;
 
