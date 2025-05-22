@@ -1,11 +1,14 @@
 using System.Reflection;
 using Application;
+using Asp.Versioning;
+using Asp.Versioning.Builder;
 using HealthChecks.UI.Client;
 using Infrastructure;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Serilog;
 using Web.Api;
 using Web.Api.Extensions;
+using Web.Api.OpenApi;
 
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
@@ -30,9 +33,33 @@ builder.Services.AddCors(options =>
     .AllowAnyMethod()
 ));
 
+builder.Services.AddApiVersioning(options =>
+{
+    options.DefaultApiVersion = new ApiVersion(1);
+    options.ReportApiVersions = true;
+    options.AssumeDefaultVersionWhenUnspecified = true;
+    options.ApiVersionReader = new UrlSegmentApiVersionReader();
+})
+.AddApiExplorer(options =>
+{
+    options.GroupNameFormat = "'v'V";
+    options.SubstituteApiVersionInUrl = true;
+});
+
+builder.Services.ConfigureOptions<ConfigureSwaggerGenOptions>();
+
 WebApplication app = builder.Build();
 
-app.MapEndpoints();
+ApiVersionSet apiVersionSet = app.NewApiVersionSet()
+            .HasApiVersion(new ApiVersion(1))
+            .ReportApiVersions()
+            .Build();
+
+RouteGroupBuilder group = app
+    .MapGroup("api/v{version:apiVersion}")
+    .WithApiVersionSet(apiVersionSet);
+
+app.MapEndpoints(group);
 
 if (app.Environment.IsDevelopment())
 {
@@ -55,9 +82,6 @@ app.UseExceptionHandler();
 app.UseAuthentication();
 
 app.UseAuthorization();
-
-// REMARK: If you want to use Controllers, you'll need this.
-app.MapControllers();
 
 app.UseCors("AllowFrontEndServer");
 
