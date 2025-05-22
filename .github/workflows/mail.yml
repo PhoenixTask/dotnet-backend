@@ -19,7 +19,7 @@ jobs:
           
           # Email details
           subject: "📌 New Commit to Main"
-          to: ErfanMelon@outlook.com
+          to: ErfanMelon@outlook.com,Alireza3205@gmail.com
           from: PhoneixTaskApi
           content_type: text/plain
           body: |
