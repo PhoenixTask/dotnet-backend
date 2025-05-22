@@ -10,7 +10,7 @@ internal sealed class Get : IEndpoint
 {
     public void MapEndpoint(IEndpointRouteBuilder app)
     {
-        app.MapGet("workspace", async (ISender sender, CancellationToken cancellationToken) =>
+        app.MapGet("workspace/", async (ISender sender, CancellationToken cancellationToken) =>
         {
             var command = new GetWorkspacesQuery();
 
