@@ -11,7 +11,7 @@ internal sealed class Create : IEndpoint
     public sealed record Request(string Name, Guid BoardId, string Description, DateTime? DeadLine, int Order, int Priority);
     public void MapEndpoint(IEndpointRouteBuilder app)
     {
-        app.MapPost("task/create/", async (Request request, ISender sender, CancellationToken cancellationToken) =>
+        app.MapPost("task/", async (Request request, ISender sender, CancellationToken cancellationToken) =>
         {
             var command = new CreateTaskCommand
             {
