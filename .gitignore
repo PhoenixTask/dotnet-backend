@@ -401,3 +401,4 @@ FodyWeavers.xsd
 /src/Web.Api/PhoenixTask.db
 /src/Web.Api/PhoenixTask.db-shm
 /src/Web.Api/PhoenixTask.db-wal
+/src/Web.Api/uploads/*
