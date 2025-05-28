@@ -1,4 +1,5 @@
 ﻿using System.Security.Claims;
+using System.Security.Cryptography;
 using System.Text;
 using Application.Abstractions.Authentication;
 using Domain.Users;
@@ -35,5 +36,10 @@ internal sealed class TokenProvider(IConfiguration configuration) : ITokenProvid
         string token = handler.CreateToken(tokenDescriptor);
 
         return token;
+    }
+
+    public string GenerateRefreshToken()
+    {
+        return Convert.ToBase64String(RandomNumberGenerator.GetBytes(64));
     }
 }
