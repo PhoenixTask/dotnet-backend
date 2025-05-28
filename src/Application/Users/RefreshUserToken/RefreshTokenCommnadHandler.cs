@@ -14,9 +14,9 @@ internal sealed class RefreshTokenCommnadHandler(
 {
     public async Task<Result<LoginResponse>> Handle(RefreshTokenCommnad request, CancellationToken cancellationToken)
     {
-        RefreshToken? refreshToken = await context.RefreshTokens
+        UserToken? refreshToken = await context.RefreshTokens
             .Include(x=>x.User)
-            .SingleOrDefaultAsync(x=>x.UserId == request.UserId && x.Token == request.RefreshToken,cancellationToken);
+            .SingleOrDefaultAsync(x=>x.UserId == request.UserId && x.Token == request.RefreshToken && x.TokenType == TokenType.RefreshToken,cancellationToken);
         if(refreshToken is null)
         {
             return Result.Failure<LoginResponse>(UserErrors.InvalidPermission);
