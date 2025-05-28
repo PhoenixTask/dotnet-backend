@@ -11,8 +11,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Infrastructure.Database.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20250528124958_Create_RefreshToken_Table")]
-    partial class Create_RefreshToken_Table
+    [Migration("20250528135626_Add_TokenType_To_RefreshToken_Table")]
+    partial class Add_TokenType_To_RefreshToken_Table
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -379,36 +379,6 @@ namespace Infrastructure.Database.Migrations
                     b.ToTable("tasks", "public");
                 });
 
-            modelBuilder.Entity("Domain.Users.UserToken", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("TEXT")
-                        .HasColumnName("id");
-
-                    b.Property<DateTime>("ExpireOnUtc")
-                        .HasColumnType("TEXT")
-                        .HasColumnName("expire_on_utc");
-
-                    b.Property<string>("Token")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("TEXT")
-                        .HasColumnName("token");
-
-                    b.Property<Guid>("UserId")
-                        .HasColumnType("TEXT")
-                        .HasColumnName("user_id");
-
-                    b.HasKey("Id")
-                        .HasName("pk_refresh_tokens");
-
-                    b.HasIndex("UserId")
-                        .HasDatabaseName("ix_refresh_tokens_user_id");
-
-                    b.ToTable("refresh_tokens", "public");
-                });
-
             modelBuilder.Entity("Domain.Users.Setting", b =>
                 {
                     b.Property<Guid>("Id")
@@ -517,6 +487,40 @@ namespace Infrastructure.Database.Migrations
                         .HasDatabaseName("ix_users_normalized_user_name");
 
                     b.ToTable("users", "public");
+                });
+
+            modelBuilder.Entity("Domain.Users.UserToken", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("TEXT")
+                        .HasColumnName("id");
+
+                    b.Property<DateTime>("ExpireOnUtc")
+                        .HasColumnType("TEXT")
+                        .HasColumnName("expire_on_utc");
+
+                    b.Property<string>("Token")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("TEXT")
+                        .HasColumnName("token");
+
+                    b.Property<int>("TokenType")
+                        .HasColumnType("INTEGER")
+                        .HasColumnName("token_type");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("TEXT")
+                        .HasColumnName("user_id");
+
+                    b.HasKey("Id")
+                        .HasName("pk_refresh_tokens");
+
+                    b.HasIndex("UserId")
+                        .HasDatabaseName("ix_refresh_tokens_user_id");
+
+                    b.ToTable("refresh_tokens", "public");
                 });
 
             modelBuilder.Entity("Domain.Workspaces.Workspace", b =>
@@ -753,18 +757,6 @@ namespace Infrastructure.Database.Migrations
                     b.Navigation("ModifiedBy");
                 });
 
-            modelBuilder.Entity("Domain.Users.UserToken", b =>
-                {
-                    b.HasOne("Domain.Users.User", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired()
-                        .HasConstraintName("fk_refresh_tokens_users_user_id");
-
-                    b.Navigation("User");
-                });
-
             modelBuilder.Entity("Domain.Users.Setting", b =>
                 {
                     b.HasOne("Domain.Users.User", "CreatedBy")
@@ -782,6 +774,18 @@ namespace Infrastructure.Database.Migrations
                     b.Navigation("CreatedBy");
 
                     b.Navigation("ModifiedBy");
+                });
+
+            modelBuilder.Entity("Domain.Users.UserToken", b =>
+                {
+                    b.HasOne("Domain.Users.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
+                        .HasConstraintName("fk_refresh_tokens_users_user_id");
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("Domain.Workspaces.Workspace", b =>
