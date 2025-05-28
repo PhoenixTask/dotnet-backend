@@ -3,9 +3,9 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Infrastructure.Users;
-internal sealed class RefreshTokenConfiguration : IEntityTypeConfiguration<RefreshToken>
+internal sealed class UserTokenConfiguration : IEntityTypeConfiguration<UserToken>
 {
-    public void Configure(EntityTypeBuilder<RefreshToken> builder)
+    public void Configure(EntityTypeBuilder<UserToken> builder)
     {
         builder.HasKey(x => x.Id);
 
