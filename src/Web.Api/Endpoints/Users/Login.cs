@@ -21,5 +21,16 @@ internal sealed class Login : IEndpoint
             return result.Match(Results.Ok, CustomResults.Problem);
         })
         .WithTags(Tags.Users);
+
+        app.MapPost("user/login", async (Request request, ISender sender, CancellationToken cancellationToken) =>
+        {
+            var command = new LoginWithUsernameCommand(request.Username, request.Password);
+
+            Result<LoginResponse> result = await sender.Send(command, cancellationToken);
+
+            return result.Match(Results.Ok, CustomResults.Problem);
+        })
+        .HasApiVersion(2)
+        .WithTags(Tags.Users);
     }
 }
