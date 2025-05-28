@@ -16,6 +16,8 @@ internal sealed class UserConfiguration : CommonEntityConfiguration<User>
 
         builder.HasIndex(u => u.NormalizedUserName);
 
+        builder.Property(u => u.ProfileImage).IsRequired(false);
+
         base.Configure(builder);
     }
 }
