@@ -5,6 +5,7 @@ using Asp.Versioning.Builder;
 using HealthChecks.UI.Client;
 using Infrastructure;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
+using Microsoft.AspNetCore.StaticFiles;
 using Serilog;
 using Web.Api;
 using Web.Api.Extensions;
@@ -21,6 +22,7 @@ builder.Services
     .AddPresentation()
     .AddInfrastructure(builder.Configuration);
 
+builder.Services.AddTransient<IContentTypeProvider, FileExtensionContentTypeProvider>();
 builder.Services.AddEndpoints(Assembly.GetExecutingAssembly());
 
 string frontAddress = builder.Configuration.GetSection("FrontEnd")
