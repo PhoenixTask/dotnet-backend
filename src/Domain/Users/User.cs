@@ -14,4 +14,5 @@ public sealed class User : Entity
     public string? PhoneNumber { get; set; }
     public string PasswordHash { get; set; }
     public string NormalizedUserName { get; set; }
+    public string ProfileImage { get; set; }
 }
