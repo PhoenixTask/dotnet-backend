@@ -36,12 +36,13 @@ internal sealed class LoginWithUsernameCommandHandler(
         string token = tokenProvider.Create(user);
         string refresh = tokenProvider.GenerateRefreshToken();
 
-        RefreshToken? refreshToken = await context.RefreshTokens.FirstOrDefaultAsync(x => x.UserId == user.Id, cancellationToken);
+        UserToken? refreshToken = await context.RefreshTokens.FirstOrDefaultAsync(x => x.UserId == user.Id, cancellationToken);
         if (refreshToken is null)
         {
-            refreshToken = new RefreshToken
+            refreshToken = new UserToken
             {
                 UserId = user.Id,
+                TokenType = TokenType.RefreshToken
             };
             await context.RefreshTokens.AddAsync(refreshToken, cancellationToken);
         }
