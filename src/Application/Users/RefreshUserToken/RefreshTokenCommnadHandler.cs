@@ -19,7 +19,12 @@ internal sealed class RefreshTokenCommnadHandler(
             .SingleOrDefaultAsync(x=>x.UserId == request.UserId && x.Token == request.RefreshToken && x.TokenType == TokenType.RefreshToken,cancellationToken);
         if(refreshToken is null)
         {
-            return Result.Failure<LoginResponse>(UserErrors.InvalidPermission);
+            return Result.Failure<LoginResponse>(UserErrors.InvalidToken);
+        }
+
+        if (refreshToken.ExpireOnUtc < DateTime.UtcNow)
+        {
+            return Result.Failure<LoginResponse>(UserErrors.InvalidToken);
         }
 
         string token = tokenProvider.Create(refreshToken.User);
