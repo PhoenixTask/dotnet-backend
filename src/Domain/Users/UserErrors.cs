@@ -35,4 +35,8 @@ public static class UserErrors
     public static readonly Error InvalidPermission = Error.Problem(
         "Users.InvalidPermission",
         "You are not authorized to perform this action");
+
+    public static readonly Error InvalidToken = Error.Problem(
+        "Users.InvalidToken",
+        "Token is invalid");
 }
