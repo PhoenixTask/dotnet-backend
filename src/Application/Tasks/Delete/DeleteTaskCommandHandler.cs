@@ -1,9 +1,11 @@
 ﻿using Application.Abstractions.Authentication;
 using Application.Abstractions.Data;
 using Application.Abstractions.Messaging;
+using Application.Common;
 using Domain.Tasks;
 using Microsoft.EntityFrameworkCore;
 using SharedKernel;
+using Task = Domain.Tasks.Task;
 
 namespace Application.Tasks.Delete;
 
@@ -13,11 +15,21 @@ internal sealed class DeleteTaskCommandHandler(
     public async Task<Result> Handle(DeleteTaskCommand request, CancellationToken cancellationToken)
     {
         Guid userId = userContext.UserId;
+        Task? task = await context.Tasks
+            .SingleOrDefaultAsync(x => x.Id == request.TaskId && x.CreatedById == userId, cancellationToken);
 
-        int countDeleted = await context.Tasks
-            .Where(x => x.Id == request.TaskId && x.CreatedById == userId)
-            .ExecuteDeleteAsync(cancellationToken);
+        if (task is null)
+        {
+            return Result.Failure(TaskErrors.NotFound(request.TaskId));
+        }
 
-        return countDeleted > 0 ? Result.Success() : Result.Failure(TaskErrors.NotFound(request.TaskId));
+        context.Tasks
+            .Where(x => x.BoardId == task.BoardId)
+            .DropFromOrderedList(task.Order);
+
+        context.Tasks.Remove(task);
+        await context.SaveChangesAsync(cancellationToken);
+
+        return Result.Success();
     }
 }
