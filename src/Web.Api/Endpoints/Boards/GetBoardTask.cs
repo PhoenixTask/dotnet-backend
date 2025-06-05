@@ -1,4 +1,5 @@
 ﻿using Application.Boards.GetBoardTask;
+using Application.Common;
 using MediatR;
 using SharedKernel;
 using Web.Api.Extensions;
@@ -14,7 +15,7 @@ internal sealed class GetBoardTask : IEndpoint
         {
             var query = new GetBoardTaskQuery(projectId, page, pageSize);
 
-            Result<List<BoardResponse>> result = await sender.Send(query, cancellationToken);
+            Result<PaginatedResponse<BoardResponse>> result = await sender.Send(query, cancellationToken);
 
             return result.Match(Results.Ok, CustomResults.Problem);
         })
