@@ -1,6 +1,7 @@
 ﻿using Application.Abstractions.Authentication;
 using Application.Abstractions.Data;
 using Application.Abstractions.Messaging;
+using Application.Common;
 using Domain.Projects;
 using Microsoft.EntityFrameworkCore;
 using SharedKernel;
@@ -33,6 +34,10 @@ internal sealed class CreateTaskCommandHandler(
             Order = request.Order,
             Priority = request.Priority,
         };
+
+        context.Tasks
+          .Where(x => x.BoardId == request.BoardId)
+          .PutInOrder(ref task, request.Order);
 
         context.Tasks.Add(task);
         await context.SaveChangesAsync(cancellationToken);
