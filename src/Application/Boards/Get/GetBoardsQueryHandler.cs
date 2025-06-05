@@ -16,6 +16,8 @@ internal sealed class GetBoardsQueryHandler(
         return await context.Boards
             .AsNoTracking()
             .Where(x => x.Project.Id == request.ProjectId && x.CreatedById == userId)
+            .OrderBy(x => x.Order)
+            .ThenBy(x=>x.CreatedOnUtc)
             .Select(x => new BoardResponse
             {
                 Id = x.Id,
