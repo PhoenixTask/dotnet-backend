@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 
 namespace Application.Common;
-internal abstract record PaginatedRequest(int Page, int PageSize);
+public abstract record PaginatedRequest(int Page, int PageSize);
 public record PaginatedResponse<T>(List<T> Data, int Page, int Total) where T : class;
 
 internal static class PaginationHelper
