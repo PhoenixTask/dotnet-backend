@@ -4,7 +4,7 @@ using Domain.Users;
 using SharedKernel;
 
 namespace Domain.Tasks;
-public sealed class Task : Entity, IAuditableEntity, IBlamableEntity, ISoftDeletableEntity
+public sealed class Task : Entity, IAuditableEntity, IBlamableEntity, ISoftDeletableEntity , IOrderable
 {
     public Guid Id { get; set; }
     public string Name { get; set; }
