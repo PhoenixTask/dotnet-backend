@@ -3,7 +3,7 @@ using Domain.Users;
 using SharedKernel;
 
 namespace Domain.Projects;
-public sealed class Board : Entity , IAuditableEntity,IBlamableEntity, ISoftDeletableEntity
+public sealed class Board : Entity , IAuditableEntity,IBlamableEntity, ISoftDeletableEntity , IOrderable
 {
     public Guid Id { get; set; }
     public string Name { get; set; }
@@ -15,6 +15,7 @@ public sealed class Board : Entity , IAuditableEntity,IBlamableEntity, ISoftDele
     public DateTime? DeletedOnUtc { get; }
     public bool Deleted { get; }
     public Project Project { get; set; }
+    public Guid ProjectId { get; set; }
     public User? CreatedBy { get; set; }
     public User? ModifiedBy { get; }
     public User? DeletedBy { get; }
