@@ -50,7 +50,9 @@ public static class DependencyInjection
             options => options
                 .UseSqlite(connectionString, npgsqlOptions =>
                     npgsqlOptions.MigrationsHistoryTable(HistoryRepository.DefaultTableName, Schemas.Default))
-                .UseSnakeCaseNamingConvention());
+                .UseSnakeCaseNamingConvention()
+                //.EnableSensitiveDataLogging()
+                );
 
         services.AddScoped<IApplicationDbContext>(sp => sp.GetRequiredService<ApplicationDbContext>());
 
