@@ -1,6 +1,7 @@
 ﻿using Application.Abstractions.Authentication;
 using Application.Abstractions.Data;
 using Application.Abstractions.Messaging;
+using Application.Common;
 using Domain.Projects;
 using Microsoft.EntityFrameworkCore;
 using SharedKernel;
@@ -19,7 +20,10 @@ internal sealed class ChangeBoardOrderCommandHandler(IApplicationDbContext conte
             return Result.Failure(BoardErrors.NotFound(request.BoardId));
         }
 
-        board.Order = request.Order;
+        context.Boards
+           .Where(x => x.ProjectId == board.ProjectId)
+           .PutInOrder(ref board,request.Order);
+
         await context.SaveChangesAsync(cancellationToken);
         
         return Result.Success();
