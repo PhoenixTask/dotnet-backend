@@ -8,6 +8,6 @@ internal sealed class UpdateBoardCommandValidator : AbstractValidator<UpdateBoar
     {
         RuleFor(x => x.Name).NotEmpty();
         RuleFor(x => x.Color).NotEmpty();
-        RuleFor(x => x.Order).ExclusiveBetween(-100, 100);
+        RuleFor(x => x.Order).ExclusiveBetween(int.MinValue, int.MaxValue);
     }
 }
