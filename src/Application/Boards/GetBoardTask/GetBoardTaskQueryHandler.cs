@@ -2,6 +2,7 @@
 using Application.Abstractions.Authentication;
 using Application.Abstractions.Data;
 using Application.Abstractions.Messaging;
+using Application.Common;
 using Application.Users.AccessAction;
 using Domain.Projects;
 using MediatR;
@@ -10,9 +11,9 @@ using SharedKernel;
 
 namespace Application.Boards.GetBoardTask;
 
-internal sealed class GetBoardTaskQueryHandler(IApplicationDbContext context,IUserContext userContext,ISender sender) : IQueryHandler<GetBoardTaskQuery, List<BoardResponse>>
+internal sealed class GetBoardTaskQueryHandler(IApplicationDbContext context,IUserContext userContext,ISender sender) : IQueryHandler<GetBoardTaskQuery, PaginatedResponse<BoardResponse>>
 {
-    public async Task<Result<List<BoardResponse>>> Handle(GetBoardTaskQuery request, CancellationToken cancellationToken)
+    public async Task<Result<PaginatedResponse<BoardResponse>>> Handle(GetBoardTaskQuery request, CancellationToken cancellationToken)
     {
         Guid userId = userContext.UserId;
 
@@ -20,7 +21,7 @@ internal sealed class GetBoardTaskQueryHandler(IApplicationDbContext context,IUs
         Result hasAccess = await sender.Send(accessRequest, cancellationToken);
         if (hasAccess.IsFailure)
         {
-            return Result.Failure<List<BoardResponse>>(hasAccess.Error);
+            return Result.Failure<PaginatedResponse<BoardResponse>>(hasAccess.Error);
         }
 
         return await context.Boards
@@ -28,9 +29,7 @@ internal sealed class GetBoardTaskQueryHandler(IApplicationDbContext context,IUs
             .AsNoTracking()
             .Where(x => x.Project.Id == request.ProjectId)
             .Select(x => ToBoardResponse(x))
-            .Skip((request.Page - 1) * request.PageSize)
-            .Take(request.PageSize)
-            .ToListAsync(cancellationToken);
+            .ToPagedAsync(request, cancellationToken);
     }
 
     private static BoardResponse ToBoardResponse(Board x)
