@@ -1,6 +1,7 @@
 ﻿using Application.Abstractions.Authentication;
 using Application.Abstractions.Data;
 using Application.Abstractions.Messaging;
+using Application.Common;
 using Domain.Projects;
 using Microsoft.EntityFrameworkCore;
 using SharedKernel;
@@ -13,11 +14,20 @@ internal sealed class DeleteBoardCommandHandler(
     public async Task<Result> Handle(DeleteBoardCommand request, CancellationToken cancellationToken)
     {
         Guid userId = userContext.UserId;
+        Board? board = await context.Boards
+            .SingleOrDefaultAsync(x => x.Id == request.boardId && x.CreatedById == userId, cancellationToken);
 
-        int countDeleted = await context.Boards
-            .Where(x => x.Id == request.boardId && x.CreatedById == userId)
-            .ExecuteDeleteAsync(cancellationToken);
+        if (board is null)
+        {
+            return Result.Failure(BoardErrors.NotFound(request.boardId));
+        }
+        context.Boards
+            .Where(x => x.ProjectId == board.ProjectId)
+            .DropFromOrderedList(board.Order);
 
-        return countDeleted > 0 ? Result.Success() : Result.Failure(BoardErrors.NotFound(request.boardId));
+        context.Boards.Remove(board);
+        await context.SaveChangesAsync(cancellationToken);
+
+        return Result.Success();
     }
 }
