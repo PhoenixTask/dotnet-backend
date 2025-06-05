@@ -1,6 +1,7 @@
 ﻿using Application.Abstractions.Authentication;
 using Application.Abstractions.Data;
 using Application.Abstractions.Messaging;
+using Application.Common;
 using Domain.Projects;
 using Microsoft.EntityFrameworkCore;
 using SharedKernel;
@@ -13,7 +14,8 @@ internal sealed class CreateBoardCommandHandler(
     public async Task<Result<Guid>> Handle(CreateBoardCommand request, CancellationToken cancellationToken)
     {
         Guid userId = userContext.UserId;
-        Project? project = await context.Projects.SingleOrDefaultAsync(x => x.Id == request.ProjectId && x.CreatedById == userId, cancellationToken: cancellationToken);
+        Project? project = await context.Projects
+            .SingleOrDefaultAsync(x => x.Id == request.ProjectId && x.CreatedById == userId, cancellationToken: cancellationToken);
 
         if (project is null)
         {
@@ -23,11 +25,14 @@ internal sealed class CreateBoardCommandHandler(
         var board = new Board
         {
             Color = request.Color,
-            Order = request.Order,
             IsArchive = false,
             Name = request.Name,
             Project = project
         };
+
+        context.Boards
+            .Where(x => x.ProjectId == request.ProjectId)
+            .PutInOrder(ref board,request.Order);
 
         context.Boards.Add(board);
         await context.SaveChangesAsync(cancellationToken);
