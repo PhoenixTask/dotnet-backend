@@ -11,7 +11,7 @@ internal sealed class UpdateTaskCommandValidator : AbstractValidator<UpdateTaskC
         RuleFor(x => x.BoardId).NotEmpty();
         RuleFor(x => x.Description).MaximumLength(225);
         RuleFor(x => x.DeadLine).GreaterThanOrEqualTo(DateTime.Now).WithErrorCode(TaskErrors.ExpiredDeadLine.Code).WithMessage(TaskErrors.ExpiredDeadLine.Description).When(x=>x.DeadLine.HasValue);
-        RuleFor(x => x.Order).ExclusiveBetween(-100, 100);
+        RuleFor(x => x.Order).ExclusiveBetween(int.MinValue, int.MaxValue);
         RuleFor(x => x.Priority).ExclusiveBetween(-100, 100);
     }
 }
