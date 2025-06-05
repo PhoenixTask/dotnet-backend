@@ -16,6 +16,8 @@ internal sealed class GetTasksQueryHandler(IApplicationDbContext context, IUserC
         return await context.Tasks
             .AsNoTracking()
             .Where(x => x.Board.Id == request.BoardId && x.CreatedById == userId)
+            .OrderBy(x => x.Order)
+            .ThenBy(x => x.Priority)
             .Select(x => new TaskResponse
             {
                 Id = x.Id,
