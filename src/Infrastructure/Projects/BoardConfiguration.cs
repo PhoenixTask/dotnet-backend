@@ -15,6 +15,11 @@ internal sealed class BoardConfiguration : CommonEntityConfiguration<Board>
             .HasForeignKey(x => x.BoardId)
             .OnDelete(DeleteBehavior.Cascade);
 
+        builder.HasOne(b => b.Project)
+            .WithMany(p => p.Boards)
+            .HasForeignKey(x=>x.ProjectId)
+            .IsRequired();
+
         base.Configure(builder);
     }
 }
