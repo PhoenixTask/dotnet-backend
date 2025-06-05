@@ -12,10 +12,6 @@ internal sealed class ProjectConfiguration : CommonEntityConfiguration<Project>
             .WithMany(w => w.Projects)
             .IsRequired();
 
-        builder.HasMany(p => p.Boards)
-            .WithOne(b => b.Project)
-            .IsRequired();
-
         base.Configure(builder);
     }
 }
