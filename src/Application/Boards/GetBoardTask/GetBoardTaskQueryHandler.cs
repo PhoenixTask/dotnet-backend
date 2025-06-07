@@ -17,6 +17,13 @@ internal sealed class GetBoardTaskQueryHandler(IApplicationDbContext context,IUs
     {
         Guid userId = userContext.UserId;
 
+        bool projectExist = await context.Projects.AnyAsync(x => x.Id == request.ProjectId, cancellationToken);
+
+        if(!projectExist)
+        {
+            return Result.Failure<PaginatedResponse<BoardResponse>>(ProjectErrors.NotFound(request.ProjectId));
+        }
+
         UserAccessCommand accessRequest = new(userId, request.ProjectId, typeof(Project));
         Result hasAccess = await sender.Send(accessRequest, cancellationToken);
         if (hasAccess.IsFailure)
