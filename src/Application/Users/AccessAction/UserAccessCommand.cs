@@ -28,7 +28,11 @@ internal sealed class UserAccessCommandHandler(IApplicationDbContext context) : 
     private async Task<bool> HasWorkspaceAccess(Guid userId, Guid workspaceId, CancellationToken cancellationToken)
     {
         // Check if the user is the creator of the workspace
-        Workspace workspace = await context.Workspaces.SingleAsync(x => x.Id == workspaceId, cancellationToken);
+        Workspace? workspace = await context.Workspaces.SingleOrDefaultAsync(x => x.Id == workspaceId, cancellationToken);
+        if(workspace is null)
+        {
+            return false;
+        }
         if (workspace.CreatedById == userId)
         {
             return true; // Creator always has access
@@ -41,8 +45,11 @@ internal sealed class UserAccessCommandHandler(IApplicationDbContext context) : 
 
     public async Task<bool> HasAccessToProject(Guid userId, Guid projectId, CancellationToken cancellationToken)
     {
-        Project project = await context.Projects.SingleAsync(x => x.Id == projectId, cancellationToken);
-
+        Project? project = await context.Projects.SingleOrDefaultAsync(x => x.Id == projectId, cancellationToken);
+        if(project is null)
+        {
+            return false;
+        }
         if (project.CreatedById == userId)
         {
             return true; // Creator always has access
@@ -53,11 +60,14 @@ internal sealed class UserAccessCommandHandler(IApplicationDbContext context) : 
 
     public async Task<bool> HasAccessToBoard(Guid userId, Guid boardId, CancellationToken cancellationToken)
     {
-        Board board = await context.Boards
+        Board? board = await context.Boards
             .Include(b => b.Project)
             .ThenInclude(p => p.Workspace)
-            .SingleAsync(b => b.Id == boardId, cancellationToken);
-
+            .SingleOrDefaultAsync(b => b.Id == boardId, cancellationToken);
+        if(board is null)
+        {
+            return false;
+        }
         if (board.CreatedById == userId)
         {
             return true; // Creator always has access
