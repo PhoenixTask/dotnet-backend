@@ -32,11 +32,12 @@ public static class UserErrors
         "Users.SettingNotFound",
         "The setting with specified key was not found");
 
-    public static readonly Error InvalidPermission = Error.Problem(
+    public static readonly Error InvalidPermission = new(
         "Users.InvalidPermission",
-        "You are not authorized to perform this action");
+        "You are not authorized to perform this action",
+        ErrorType.NotAuthorize);
 
-    public static readonly Error InvalidToken = Error.Problem(
+    public static readonly Error InvalidToken = Error.Failure(
         "Users.InvalidToken",
         "Token is invalid");
 }
