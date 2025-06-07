@@ -8,9 +8,9 @@ using SharedKernel;
 namespace Application.Workspaces.Delete;
 
 internal sealed class DeleteWorkspaceCommandHandler(IApplicationDbContext context,IUserContext userContext)
-    : ICommandHandler<DeleteWorkspaceCommand, Result>
+    : ICommandHandler<DeleteWorkspaceCommand>
 {
-    public async Task<Result<Result>> Handle(DeleteWorkspaceCommand request, CancellationToken cancellationToken)
+    public async Task<Result> Handle(DeleteWorkspaceCommand request, CancellationToken cancellationToken)
     {
         Workspace? workspace =await context.Workspaces
             .SingleOrDefaultAsync(x =>x.Id == request.Id && x.CreatedById == userContext.UserId, cancellationToken: cancellationToken);
@@ -21,8 +21,8 @@ internal sealed class DeleteWorkspaceCommandHandler(IApplicationDbContext contex
         }
 
         context.Workspaces.Remove(workspace);
-        await context.SaveChangesAsync(cancellationToken);
+        int rowAffect = await context.SaveChangesAsync(cancellationToken);
 
-        return Result.Success();
+        return rowAffect > 0 ? Result.Success() : Result.Failure(Error.None);
     }
 }
