@@ -35,7 +35,7 @@ public class RegisterUserCommandHandlerTests
 
         _dbContextMock.Users.Returns(existingUsers);
 
-        var command = new RegisterUserCommand("NewUser","existing@email.com", "Password123");
+        var command = new RegisterUserCommand("NewUser","existing@email.com", "Password123",string.Empty,string.Empty);
 
         // Act
         Result<Guid> result = await _handler.Handle(command, CancellationToken.None);
@@ -56,7 +56,7 @@ public class RegisterUserCommandHandlerTests
 
         _dbContextMock.Users.Returns(existingUsers);
 
-        var command = new RegisterUserCommand("TakenUsername","newuser@example.com", "Password123");
+        var command = new RegisterUserCommand("TakenUsername", "newuser@example.com", "Password123", string.Empty, string.Empty);
 
         // Act
         Result<Guid> result = await _handler.Handle(command, CancellationToken.None);
@@ -73,7 +73,7 @@ public class RegisterUserCommandHandlerTests
         DbSet<User> usersDbSet = new List<User>().AsQueryable().BuildMockDbSet();
         _dbContextMock.Users.Returns(usersDbSet);
 
-        var command = new RegisterUserCommand("newuser@example.com", "NewUser", "SecretPassword");
+        var command = new RegisterUserCommand("NewUser","newuser@example.com", "SecretPassword", string.Empty, string.Empty);
 
         _passwordHasherMock.Hash("SecretPassword").Returns("hashed-password");
 
