@@ -3,12 +3,15 @@ using Application.Abstractions.Data;
 using Domain.Interfaces;
 using Domain.Projects;
 using Domain.Subscriptions;
+using Domain.Tasks;
 using Domain.Users;
 using Domain.Workspaces;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using SharedKernel;
+using Task = System.Threading.Tasks.Task;
+
 
 namespace Infrastructure.Database;
 /// <summary>
@@ -28,6 +31,7 @@ public sealed class ApplicationDbContext(DbContextOptions<ApplicationDbContext> 
     public DbSet<Setting> Settings { get; set; }
     public DbSet<TeamMember> Members { get; set; }
     public DbSet<UserToken> RefreshTokens { get; set; }
+    public DbSet<Comment> Comments { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
