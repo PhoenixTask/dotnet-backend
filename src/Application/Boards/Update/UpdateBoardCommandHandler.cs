@@ -1,7 +1,6 @@
 ﻿using Application.Abstractions.Authentication;
 using Application.Abstractions.Data;
 using Application.Abstractions.Messaging;
-using Application.Common;
 using Domain.Projects;
 using Microsoft.EntityFrameworkCore;
 using SharedKernel;
@@ -23,10 +22,7 @@ internal sealed class UpdateBoardCommandHandler(
 
         board.Name = request.Name;
         board.Color = request.Color;
-
-        context.Boards
-            .Where(x => x.ProjectId == board.ProjectId)
-            .PutInOrder(ref board,request.Order);
+        board.Order = request.Order;
 
         await context.SaveChangesAsync(cancellationToken);
 
