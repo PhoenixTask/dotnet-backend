@@ -1,6 +1,4 @@
-﻿using System.Threading;
-using Domain.Interfaces;
-using Domain.Projects;
+﻿using Domain.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using SharedKernel;
 
