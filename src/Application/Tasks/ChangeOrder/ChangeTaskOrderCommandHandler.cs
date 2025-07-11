@@ -1,8 +1,6 @@
 ﻿using Application.Abstractions.Authentication;
 using Application.Abstractions.Data;
 using Application.Abstractions.Messaging;
-using Application.Common;
-using Domain.Projects;
 using Domain.Tasks;
 using Microsoft.EntityFrameworkCore;
 using SharedKernel;
@@ -24,9 +22,7 @@ internal sealed class ChangeTaskOrderCommandHandler
             return Result.Failure(TaskErrors.NotFound(request.TaskId));
         }
 
-        context.Tasks
-           .Where(x => x.BoardId == task.BoardId)
-           .PutInOrder(ref task, request.Order);
+        task.Order = request.Order;
 
         await context.SaveChangesAsync(cancellationToken);
 
