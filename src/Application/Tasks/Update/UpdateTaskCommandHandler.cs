@@ -1,7 +1,6 @@
 ﻿using Application.Abstractions.Authentication;
 using Application.Abstractions.Data;
 using Application.Abstractions.Messaging;
-using Application.Common;
 using Domain.Projects;
 using Domain.Tasks;
 using Microsoft.EntityFrameworkCore;
@@ -36,10 +35,7 @@ internal sealed class UpdateTaskCommandHandler
         task.Description = request.Description;
         task.Name = request.Name;
         task.Priority = request.Priority;
-
-        context.Tasks
-          .Where(x => x.BoardId== task.BoardId)
-          .PutInOrder(ref task, request.Order);
+        task.Order = request.Order;
 
         await context.SaveChangesAsync(cancellationToken);
         return Result.Success();
