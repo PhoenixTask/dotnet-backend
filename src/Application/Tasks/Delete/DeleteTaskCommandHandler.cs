@@ -1,7 +1,6 @@
 ﻿using Application.Abstractions.Authentication;
 using Application.Abstractions.Data;
 using Application.Abstractions.Messaging;
-using Application.Common;
 using Domain.Tasks;
 using Microsoft.EntityFrameworkCore;
 using SharedKernel;
@@ -22,10 +21,6 @@ internal sealed class DeleteTaskCommandHandler(
         {
             return Result.Failure(TaskErrors.NotFound(request.TaskId));
         }
-
-        context.Tasks
-            .Where(x => x.BoardId == task.BoardId)
-            .DropFromOrderedList(task.Order);
 
         context.Tasks.Remove(task);
         await context.SaveChangesAsync(cancellationToken);
