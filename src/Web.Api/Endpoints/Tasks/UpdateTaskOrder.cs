@@ -23,5 +23,15 @@ internal sealed class UpdateTaskOrder : IEndpoint
         })
        .RequireAuthorization()
        .WithTags(Tags.Tasks);
+
+        app.MapPatch("task/update-order", async (ChangeTasksOrderCommand command, ISender sender, CancellationToken cancellationToken) =>
+        {
+            Result result = await sender.Send(command, cancellationToken);
+
+            return result.Match(Results.NoContent, CustomResults.Problem);
+        })
+        .RequireAuthorization()
+        .HasApiVersion(2)
+        .WithTags(Tags.Tasks);
     }
 }
