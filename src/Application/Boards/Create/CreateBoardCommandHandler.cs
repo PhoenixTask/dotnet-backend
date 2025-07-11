@@ -1,7 +1,6 @@
 ﻿using Application.Abstractions.Authentication;
 using Application.Abstractions.Data;
 using Application.Abstractions.Messaging;
-using Application.Common;
 using Domain.Projects;
 using Microsoft.EntityFrameworkCore;
 using SharedKernel;
@@ -27,12 +26,9 @@ internal sealed class CreateBoardCommandHandler(
             Color = request.Color,
             IsArchive = false,
             Name = request.Name,
-            Project = project
+            Project = project,
+            Order = request.Order,
         };
-
-        context.Boards
-            .Where(x => x.ProjectId == request.ProjectId)
-            .PutInOrder(ref board,request.Order);
 
         context.Boards.Add(board);
         await context.SaveChangesAsync(cancellationToken);
