@@ -7,6 +7,6 @@ internal sealed class ChangeTaskOrderCommandValidator : AbstractValidator<Change
 {
     public ChangeTaskOrderCommandValidator()
     {
-        RuleFor(x => x.Order).ExclusiveBetween(int.MinValue, int.MaxValue);
+        RuleFor(x => x.Order).ExclusiveBetween(0, int.MaxValue);
     }
 }
