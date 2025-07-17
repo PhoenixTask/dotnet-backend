@@ -16,8 +16,7 @@ internal sealed class Create : IEndpoint
             var command = new CreateBoardCommand(
                 request.ProjectId,
                 request.Name,
-                request.Color,
-                request.Order);
+                request.Color);
 
             Result<Guid> result = await sender.Send(command, cancellationToken);
 
