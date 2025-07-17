@@ -15,7 +15,10 @@ internal sealed class UploadProfileCommandHandler(IApplicationDbContext context)
         {
             return Result.Failure(UserErrors.NotFound(request.UserId));
         }
-        string filePath = Path.Combine("uploads/user-images", $"{user.Id}{Path.GetExtension(request.FileName)}");
+
+        string path = "uploads/user-images";
+        await EnsureFolderCreated(path);
+        string filePath = Path.Combine(path, $"{user.Id}{Path.GetExtension(request.FileName)}");
 
         byte[] imageByteArray = Convert.FromBase64String(request.Base64File);
 
@@ -25,5 +28,14 @@ internal sealed class UploadProfileCommandHandler(IApplicationDbContext context)
         await context.SaveChangesAsync(cancellationToken);
 
         return Result.Success();
+    }
+
+    private Task EnsureFolderCreated(string path)
+    {
+        if (!Directory.Exists(path))
+        {
+            Directory.CreateDirectory(path);
+        }
+        return Task.CompletedTask;
     }
 }
