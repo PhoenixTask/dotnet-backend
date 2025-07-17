@@ -7,6 +7,5 @@ public sealed class CreateTaskCommand : ICommand<Guid>
     public Guid BoardId { get; set; }
     public string Description { get; set; }
     public DateTime? DeadLine { get; set; }
-    public int Order { get; set; }
     public int Priority { get; set; }
 }
