@@ -14,6 +14,7 @@ internal sealed class DeleteBoardCommandHandler(
     {
         Guid userId = userContext.UserId;
         Board? board = await context.Boards
+            .Include(x => x.Tasks)
             .SingleOrDefaultAsync(x => x.Id == request.boardId && x.CreatedById == userId, cancellationToken);
 
         if (board is null)
