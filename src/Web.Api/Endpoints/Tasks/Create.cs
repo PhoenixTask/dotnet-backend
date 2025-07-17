@@ -8,7 +8,7 @@ namespace Web.Api.Endpoints.Tasks;
 
 internal sealed class Create : IEndpoint
 {
-    public sealed record Request(string Name, Guid BoardId, string Description, DateTime? DeadLine, int Order, int Priority);
+    public sealed record Request(string Name, Guid BoardId, string Description, DateTime? DeadLine, int Priority);
     public void MapEndpoint(IEndpointRouteBuilder app)
     {
         app.MapPost("task/", async (Request request, ISender sender, CancellationToken cancellationToken) =>
@@ -17,7 +17,6 @@ internal sealed class Create : IEndpoint
             {
                 BoardId = request.BoardId,
                 Priority = request.Priority,
-                Order = request.Order,
                 Name = request.Name,
                 Description = request.Description,
                 DeadLine = request.DeadLine
