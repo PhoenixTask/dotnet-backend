@@ -14,10 +14,20 @@ internal sealed class DeleteProjectCommandHandler(
     {
         Guid userId = userContext.UserId;
 
-        int countDeleted = await context.Projects
+        Project? project = await context.Projects
+            .Include(x => x.Boards)
+            .ThenInclude(x => x.Tasks)
             .Where(x => x.Id == request.ProjectId && x.CreatedById == userId)
-            .ExecuteDeleteAsync(cancellationToken);
+            .SingleOrDefaultAsync(cancellationToken);
 
-        return countDeleted > 0 ? Result.Success() : Result.Failure(ProjectErrors.NotFound(request.ProjectId));
+        if (project is null)
+        {
+            return Result.Failure(ProjectErrors.NotFound(request.ProjectId));
+        }
+
+        context.Projects.Remove(project);
+
+        await context.SaveChangesAsync(cancellationToken);
+        return Result.Success();
     }
 }
