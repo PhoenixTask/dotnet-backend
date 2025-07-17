@@ -22,7 +22,20 @@ internal sealed class ChangeTaskOrderCommandHandler
             return Result.Failure(TaskErrors.NotFound(request.TaskId));
         }
 
+        List<Task> tasks = await context.Tasks
+        .Where(x => x.BoardId == task.BoardId && x.Id != task.Id)
+        .OrderBy(x => x.Order)
+            .ToListAsync(cancellationToken);
+
+        for (int i = 0; i < tasks.Count; i++)
+        {
+            tasks[i].Order = i + 1;
+        }
         task.Order = request.Order;
+        foreach (Task? t in tasks.Where(x => x.Order >= request.Order))
+        {
+            t.Order++;
+        }
 
         await context.SaveChangesAsync(cancellationToken);
 
