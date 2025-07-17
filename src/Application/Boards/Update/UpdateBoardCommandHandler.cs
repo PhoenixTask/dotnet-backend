@@ -22,7 +22,6 @@ internal sealed class UpdateBoardCommandHandler(
 
         board.Name = request.Name;
         board.Color = request.Color;
-        board.Order = request.Order;
 
         await context.SaveChangesAsync(cancellationToken);
 
