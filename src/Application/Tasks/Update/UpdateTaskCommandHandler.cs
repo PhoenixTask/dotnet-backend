@@ -1,7 +1,6 @@
 ﻿using Application.Abstractions.Authentication;
 using Application.Abstractions.Data;
 using Application.Abstractions.Messaging;
-using Domain.Projects;
 using Domain.Tasks;
 using Microsoft.EntityFrameworkCore;
 using SharedKernel;
@@ -22,20 +21,11 @@ internal sealed class UpdateTaskCommandHandler
             return Result.Failure(TaskErrors.NotFound(request.Id));
         }
 
-        Board? board = await context.Boards.SingleOrDefaultAsync(x => x.Id == request.BoardId && x.CreatedById == userId, cancellationToken);
-
-        if (board is null)
-        {
-            return Result.Failure(BoardErrors.NotFound(request.BoardId));
-        }
-
         task.Priority = request.Priority;
-        task.Board = board;
         task.DeadLine = DateOnly.FromDateTime(request.DeadLine.GetValueOrDefault());
         task.Description = request.Description;
         task.Name = request.Name;
         task.Priority = request.Priority;
-        task.Order = request.Order;
 
         await context.SaveChangesAsync(cancellationToken);
         return Result.Success();
