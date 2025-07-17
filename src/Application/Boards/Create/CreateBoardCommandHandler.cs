@@ -21,13 +21,19 @@ internal sealed class CreateBoardCommandHandler(
             return Result.Failure<Guid>(ProjectErrors.NotFound(request.ProjectId));
         }
 
+        int lastBoardOrder = await context.Boards
+            .Where(x => x.ProjectId == request.ProjectId)
+            .OrderByDescending(x => x.Order)
+            .Select(x => x.Order)
+            .FirstOrDefaultAsync(cancellationToken);
+
         var board = new Board
         {
             Color = request.Color,
             IsArchive = false,
             Name = request.Name,
             Project = project,
-            Order = request.Order,
+            Order = lastBoardOrder + 1,
         };
 
         context.Boards.Add(board);
