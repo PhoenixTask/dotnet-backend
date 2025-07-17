@@ -1,12 +1,46 @@
-
 # PhoenixTask API
 
-a simple project management system 
+A simple project management system 
 
-this is the backEnd api of PhoneixTask project which divided into two part
+This is the backEnd API of PhoneixTask project which is divided into two parts.
 
-see front repository [here](https://github.com/AMN2080/PhoenixTask) ! 
+See front repository [here](https://github.com/AMN2080/PhoenixTask)!
 
+## Prerequisites
+
+### Install .NET 9 SDK
+
+#### 🐧 For Linux (Ubuntu/Debian)
+
+# Add Microsoft package repository
+```bash
+wget https://packages.microsoft.com/config/ubuntu/$(lsb_release -rs)/packages-microsoft-prod.deb -O packages-microsoft-prod.deb
+sudo dpkg -i packages-microsoft-prod.deb
+rm packages-microsoft-prod.deb
+```
+# Install .NET SDK
+```bash
+sudo apt-get update
+sudo apt-get install -y dotnet-sdk-9.0
+```
+# Verify installation
+```bash
+dotnet --version
+```
+
+#### 🪟  For Windows (10/11)
+
+1. **Download the installer**  
+   [Download .NET 9 SDK for Windows](https://dotnet.microsoft.com/download/dotnet/9.0)
+
+2. **Run the installer**  
+   - Double-click the downloaded `.exe` file
+   - Follow the installation prompts (use default settings)
+
+3. **Verify installation**  
+   Open PowerShell or Command Prompt and run:
+   ```powershell
+   dotnet --version
 ## Run Locally
 
 Clone the project
