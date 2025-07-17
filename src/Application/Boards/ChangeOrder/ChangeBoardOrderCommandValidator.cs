@@ -6,6 +6,6 @@ internal sealed class ChangeBoardOrderCommandValidator : AbstractValidator<Chang
 {
     public ChangeBoardOrderCommandValidator()
     {
-        RuleFor(x => x.Order).ExclusiveBetween(int.MinValue, int.MaxValue);
+        RuleFor(x => x.Order).ExclusiveBetween(1, int.MaxValue);
     }
 }
