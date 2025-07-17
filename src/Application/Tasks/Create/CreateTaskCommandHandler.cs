@@ -24,13 +24,19 @@ internal sealed class CreateTaskCommandHandler(
 
         DateOnly? deadLine = DateOnly.FromDateTime(request.DeadLine.GetValueOrDefault());
 
+        int lastTaskOrder = await context.Tasks
+            .Where(x => x.BoardId == request.BoardId)
+            .OrderByDescending(x => x.Order)
+            .Select(x => x.Order)
+            .FirstOrDefaultAsync(cancellationToken);
+
         var task = new Task
         {
             Board = board,
             DeadLine = deadLine,
             Description = request.Description,
             Name = request.Name,
-            Order = request.Order,
+            Order = lastTaskOrder + 1,
             Priority = request.Priority,
         };
 
