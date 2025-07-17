@@ -8,16 +8,15 @@ namespace Web.Api.Endpoints.Boards;
 
 internal sealed class Update : IEndpoint
 {
-    public sealed record Request(string Name, string Color, int Order);
+    public sealed record Request(string Name, string Color);
     public void MapEndpoint(IEndpointRouteBuilder app)
     {
-        app.MapPut("board/{Id}", async (Guid Id , Request request ,ISender sender, CancellationToken cancellationToken) =>
+        app.MapPut("board/{Id}", async (Guid Id, Request request, ISender sender, CancellationToken cancellationToken) =>
         {
             var command = new UpdateBoardCommand(
                Id,
                request.Name,
-               request.Color,
-               request.Order);
+               request.Color);
 
             Result result = await sender.Send(command, cancellationToken);
 
