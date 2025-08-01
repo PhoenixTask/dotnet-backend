@@ -19,6 +19,8 @@ internal sealed class Get : IEndpoint
 
             return result.Match(Results.Ok, CustomResults.Problem);
         })
+        .WithName("Get Setting")
+        .WithSummary("Get setting by key")
         .RequireAuthorization()
         .WithTags(Tags.Settings);
 
@@ -30,6 +32,8 @@ internal sealed class Get : IEndpoint
 
             return result.Match(Results.Ok, CustomResults.Problem);
         })
+        .WithName("Get Settings")
+        .WithSummary("List User's Settings")
         .RequireAuthorization()
         .WithTags(Tags.Settings);
     }
