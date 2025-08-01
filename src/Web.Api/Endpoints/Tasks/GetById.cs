@@ -19,6 +19,8 @@ internal sealed class GetById : IEndpoint
 
             return result.Match(Results.Ok, CustomResults.Problem);
         })
+        .WithName("Get Task By ID")
+        .WithSummary("Get task information by ID")
         .RequireAuthorization()
         .WithTags(Tags.Tasks);
     }
