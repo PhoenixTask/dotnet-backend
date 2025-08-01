@@ -19,6 +19,8 @@ internal sealed class GetBoardTask : IEndpoint
 
             return result.Match(Results.Ok, CustomResults.Problem);
         })
+        .WithName("List Board Task")
+        .WithSummary("Get existing board with their tasks")
         .RequireAuthorization()
         .WithTags(Tags.Boards);
     }
