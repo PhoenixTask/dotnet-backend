@@ -21,6 +21,8 @@ internal sealed class SwitchTaskBoard : IEndpoint
 
             return result.Match(Results.NoContent, CustomResults.Problem);
         })
+        .WithName("Switch Task Board")
+        .WithSummary("Move task to a different board")
        .RequireAuthorization()
        .WithTags(Tags.Tasks);
     }
