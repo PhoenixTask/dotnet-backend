@@ -10,7 +10,7 @@ internal sealed class Delete : IEndpoint
 {
     public void MapEndpoint(IEndpointRouteBuilder app)
     {
-        app.MapDelete("task/{id}", async (Guid id,ISender sender, CancellationToken cancellationToken) =>
+        app.MapDelete("task/{id}", async (Guid id, ISender sender, CancellationToken cancellationToken) =>
         {
             var command = new DeleteTaskCommand(id);
 
@@ -18,6 +18,8 @@ internal sealed class Delete : IEndpoint
 
             return result.Match(Results.NoContent, CustomResults.Problem);
         })
+        .WithName("Delete Task")
+        .WithSummary("Delete existing task")
         .RequireAuthorization()
         .WithTags(Tags.Tasks);
     }
