@@ -19,6 +19,8 @@ internal sealed class GetById : IEndpoint
 
             return result.Match(Results.Ok, CustomResults.Problem);
         })
+        .WithName("Get Board")
+        .WithSummary("Get existing board")
         .RequireAuthorization()
         .WithTags(Tags.Boards);
     }
