@@ -8,7 +8,7 @@ namespace Web.Api.Endpoints.Projects;
 
 internal sealed class Create : IEndpoint
 {
-    public sealed record Request(string Name,string Color,Guid WorkspaceId);
+    public sealed record Request(string Name, string Color, Guid WorkspaceId);
     public void MapEndpoint(IEndpointRouteBuilder app)
     {
         app.MapPost("project/", async (Request request, ISender sender, CancellationToken cancellationToken) =>
@@ -22,6 +22,8 @@ internal sealed class Create : IEndpoint
 
             return result.Match(Results.Ok, CustomResults.Problem);
         })
+        .WithName("Create Project")
+        .WithSummary("Create Project for a workspace")
         .RequireAuthorization()
         .WithTags(Tags.Projects);
     }
