@@ -19,6 +19,8 @@ internal sealed class Accept : IEndpoint
 
             return result.Match(Results.NoContent, CustomResults.Problem);
         })
+        .WithName("Accept Invitation")
+        .WithSummary("Accept workspace invitation")
        .RequireAuthorization()
        .WithTags(Tags.Subscriptions);
     }
