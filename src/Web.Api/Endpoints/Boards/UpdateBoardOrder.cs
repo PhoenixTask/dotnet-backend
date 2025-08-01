@@ -20,6 +20,8 @@ internal sealed class UpdateBoardOrder : IEndpoint
 
             return result.Match(Results.NoContent, CustomResults.Problem);
         })
+        .WithName("Update Board Order")
+        .WithSummary("Update order of existing board")
        .RequireAuthorization()
        .AdvertisesApiVersion(2)
        .WithTags(Tags.Boards);
@@ -30,6 +32,8 @@ internal sealed class UpdateBoardOrder : IEndpoint
 
             return result.Match(Results.NoContent, CustomResults.Problem);
         })
+        .WithName("Update Board Orders")
+        .WithSummary("Update order of existing boards")
        .RequireAuthorization()
        .HasApiVersion(2)
        .WithTags(Tags.Boards);
