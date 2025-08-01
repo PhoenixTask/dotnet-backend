@@ -9,7 +9,6 @@ namespace Web.Api.Endpoints.Tasks;
 
 internal sealed class Search : IEndpoint
 {
-    //public sealed record Reqeust(Guid ProjectId, string Term, int Page, int PageSize);
 
     public void MapEndpoint(IEndpointRouteBuilder app)
     {
@@ -21,6 +20,8 @@ internal sealed class Search : IEndpoint
 
             return result.Match(Results.Ok, CustomResults.Problem);
         })
+        .WithName("Search Tasks")
+        .WithSummary("Search tasks in a project by term")
         .RequireAuthorization()
         .WithTags(Tags.Tasks);
     }
