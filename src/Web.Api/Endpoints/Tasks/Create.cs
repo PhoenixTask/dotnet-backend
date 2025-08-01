@@ -26,6 +26,8 @@ internal sealed class Create : IEndpoint
 
             return result.Match(Results.Ok, CustomResults.Problem);
         })
+        .WithName("Create Task")
+        .WithSummary("Create Task for a board")
         .RequireAuthorization()
         .WithTags(Tags.Tasks);
     }
