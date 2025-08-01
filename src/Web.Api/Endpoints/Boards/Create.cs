@@ -22,6 +22,8 @@ internal sealed class Create : IEndpoint
 
             return result.Match(Results.Ok, CustomResults.Problem);
         })
+        .WithName("Create Board")
+        .WithSummary("Create new board")
         .RequireAuthorization()
         .WithTags(Tags.Boards);
     }
