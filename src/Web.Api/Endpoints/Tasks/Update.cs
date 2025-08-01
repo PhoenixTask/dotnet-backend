@@ -26,6 +26,8 @@ internal sealed class Update : IEndpoint
 
             return result.Match(Results.NoContent, CustomResults.Problem);
         })
+        .WithName("Update Task")
+        .WithSummary("Update task information")
         .RequireAuthorization()
         .WithTags(Tags.Tasks);
     }
