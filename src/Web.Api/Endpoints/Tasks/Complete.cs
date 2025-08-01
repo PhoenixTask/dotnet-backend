@@ -10,7 +10,7 @@ internal sealed class Complete : IEndpoint
 {
     public void MapEndpoint(IEndpointRouteBuilder app)
     {
-        app.MapPatch("task/complete/{Id}", async (Guid Id,bool isComplete ,ISender sender, CancellationToken cancellationToken) =>
+        app.MapPatch("task/complete/{Id}", async (Guid Id, bool isComplete, ISender sender, CancellationToken cancellationToken) =>
         {
             var command = new CompleteTaskCommand(Id, isComplete);
 
@@ -18,6 +18,8 @@ internal sealed class Complete : IEndpoint
 
             return result.Match(Results.NoContent, CustomResults.Problem);
         })
+        .WithName("Complete Task")
+        .WithSummary("Mark a task as completed")
         .RequireAuthorization()
         .WithTags(Tags.Tasks);
     }
