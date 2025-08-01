@@ -11,7 +11,7 @@ internal sealed class GetById : IEndpoint
 {
     public void MapEndpoint(IEndpointRouteBuilder app)
     {
-        app.MapGet("project/{Id}", async (Guid Id,ISender sender, CancellationToken cancellationToken) =>
+        app.MapGet("project/{Id}", async (Guid Id, ISender sender, CancellationToken cancellationToken) =>
         {
             var query = new GetProjectByIdQuery(Id);
 
@@ -19,6 +19,8 @@ internal sealed class GetById : IEndpoint
 
             return result.Match(Results.Ok, CustomResults.Problem);
         })
+        .WithName("Get Project")
+        .WithSummary("Get existing project")
         .RequireAuthorization()
         .WithTags(Tags.Projects);
     }
