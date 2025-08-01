@@ -18,6 +18,8 @@ internal sealed class Get : IEndpoint
 
             return result.Match(Results.Ok, CustomResults.Problem);
         })
+        .WithName("List Boards")
+        .WithSummary("Get existing boards")
         .RequireAuthorization()
         .WithTags(Tags.Boards);
     }
