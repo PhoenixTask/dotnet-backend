@@ -22,6 +22,8 @@ internal sealed class Update : IEndpoint
 
             return result.Match(Results.NoContent, CustomResults.Problem);
         })
+        .WithName("Edit Board")
+        .WithSummary("Modify existing board")
         .RequireAuthorization()
         .WithTags(Tags.Boards);
     }
