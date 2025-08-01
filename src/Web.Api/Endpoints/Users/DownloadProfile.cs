@@ -23,6 +23,8 @@ internal sealed class DownloadProfile : IEndpoint
             contentTypeProvider.TryGetContentType(result.Value, out string contentType);
             return Results.File(stream, contentType, $"{userId}.{Path.GetExtension(result.Value)}");
         })
+        .WithName("Download Profile Picture")
+        .WithSummary("Download user profile picture")
         //.RequireAuthorization()
         .WithTags(Tags.Users);
     }
