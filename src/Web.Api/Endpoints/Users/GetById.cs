@@ -18,8 +18,9 @@ internal sealed class GetById : IEndpoint
 
             return result.Match(Results.Ok, CustomResults.Problem);
         })
+        .WithName("Get User By ID")
+        .WithSummary("Get user information by user ID")
         .RequireAuthorization()
-        //.HasPermission(Permissions.UsersAccess)
         .WithTags(Tags.Users);
     }
 }
