@@ -21,6 +21,8 @@ internal sealed class Invite : IEndpoint
 
             return result.Match(Results.NoContent, CustomResults.Problem);
         })
+        .WithName("Invite Member")
+        .WithSummary("Invite user to participant in workspace")
         .RequireAuthorization()
         .WithTags(Tags.Subscriptions);
     }
