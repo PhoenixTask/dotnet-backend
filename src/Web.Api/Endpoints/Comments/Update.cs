@@ -19,6 +19,8 @@ internal sealed class Update : IEndpoint
 
             return result.Match(Results.NoContent, CustomResults.Problem);
         })
+        .WithName("Update Comment")
+        .WithSummary("Update specific comment for task")
         .RequireAuthorization()
         .WithTags(Tags.Comments);
     }
