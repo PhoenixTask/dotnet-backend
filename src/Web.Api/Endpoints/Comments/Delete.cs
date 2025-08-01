@@ -18,6 +18,8 @@ internal sealed class Delete : IEndpoint
 
             return result.Match(Results.NoContent, CustomResults.Problem);
         })
+        .WithName("Delete Comment")
+        .WithSummary("Delete existing comment")
         .RequireAuthorization()
         .WithTags(Tags.Comments);
     }
