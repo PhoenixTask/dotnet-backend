@@ -10,7 +10,7 @@ internal sealed class Get : IEndpoint
 {
     public void MapEndpoint(IEndpointRouteBuilder app)
     {
-        app.MapGet("workspace/{workspaceId}/project", async (Guid workspaceId,ISender sender, CancellationToken cancellationToken) =>
+        app.MapGet("workspace/{workspaceId}/project", async (Guid workspaceId, ISender sender, CancellationToken cancellationToken) =>
         {
             var query = new GetProjectsQuery(workspaceId);
 
@@ -18,6 +18,8 @@ internal sealed class Get : IEndpoint
 
             return result.Match(Results.Ok, CustomResults.Problem);
         })
+        .WithName("List Workspace's Projects")
+        .WithSummary("Get list of project for a specified workspace")
         .RequireAuthorization()
         .WithTags(Tags.Projects);
     }
