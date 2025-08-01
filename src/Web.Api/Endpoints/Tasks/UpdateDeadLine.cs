@@ -19,6 +19,8 @@ internal sealed class UpdateDeadLine : IEndpoint
 
             return result.Match(Results.NoContent, CustomResults.Problem);
         })
+        .WithName("Update Task Deadline")
+        .WithSummary("Update task deadline")
         .RequireAuthorization()
         .WithTags(Tags.Tasks);
     }
