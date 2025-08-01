@@ -18,6 +18,8 @@ internal sealed class Get : IEndpoint
 
             return result.Match(Results.Ok, CustomResults.Problem);
         })
+        .WithName("List Task's Comments")
+        .WithSummary("Get list of comments for a specified task")
         .RequireAuthorization()
         .WithTags(Tags.Comments);
     }
