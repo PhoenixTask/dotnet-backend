@@ -18,6 +18,8 @@ internal sealed class Get : IEndpoint
 
             return result.Match(Results.Ok, CustomResults.Problem);
         })
+        .WithName("List Board's Tasks")
+        .WithSummary("Get list of task for a specified board")
         .RequireAuthorization()
         .WithTags(Tags.Tasks);
     }
