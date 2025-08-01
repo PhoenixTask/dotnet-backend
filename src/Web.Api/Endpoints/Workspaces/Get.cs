@@ -12,12 +12,14 @@ internal sealed class Get : IEndpoint
     {
         app.MapGet("workspace/", async (ISender sender, CancellationToken cancellationToken) =>
         {
-            var command = new GetWorkspacesQuery();
+            var query = new GetWorkspacesQuery();
 
-            Result<List<WorkspaceResponse>> result = await sender.Send(command, cancellationToken);
+            Result<List<WorkspaceResponse>> result = await sender.Send(query, cancellationToken);
 
             return result.Match(Results.Ok, CustomResults.Problem);
         })
+        .WithName("Get Workspaces")
+        .WithSummary("Get list of user's workspaces")
         .RequireAuthorization()
         .WithTags(Tags.Workspaces);
     }

@@ -19,6 +19,8 @@ internal sealed class Info : IEndpoint
 
             return result.Match(Results.Ok, CustomResults.Problem);
         })
+        .WithName("Get User Info")
+        .WithSummary("Get current user information")
         .RequireAuthorization()
         .WithTags(Tags.Users);
     }

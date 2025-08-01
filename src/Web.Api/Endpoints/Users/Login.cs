@@ -20,6 +20,8 @@ internal sealed class Login : IEndpoint
 
             return result.Match(Results.Ok, CustomResults.Problem);
         })
+        .WithName("Login User")
+        .WithSummary("Authenticate user with username and password")
         .WithTags(Tags.Users);
 
         app.MapPost("user/login", async (Request request, ISender sender, CancellationToken cancellationToken) =>
@@ -31,6 +33,8 @@ internal sealed class Login : IEndpoint
             return result.Match(Results.Ok, CustomResults.Problem);
         })
         .HasApiVersion(2)
+        .WithName("Login User v2")
+        .WithSummary("Authenticate user with username and password (returns refresh token)")
         .WithTags(Tags.Users);
     }
 }

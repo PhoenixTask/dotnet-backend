@@ -25,6 +25,8 @@ internal sealed class Register : IEndpoint
 
             return result.Match(Results.Ok, CustomResults.Problem);
         })
+        .WithName("Register User")
+        .WithSummary("Create a new user account")
         .WithTags(Tags.Users);
     }
 }

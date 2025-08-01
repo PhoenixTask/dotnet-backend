@@ -21,6 +21,8 @@ internal sealed class RefreshToken : IEndpoint
 
             return result.Match(Results.Ok, CustomResults.Problem);
         })
+        .WithName("Refresh Token")
+        .WithSummary("Refresh user authentication token")
         .WithTags(Tags.Users);
     }
 }

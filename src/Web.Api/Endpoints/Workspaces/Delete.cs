@@ -1,5 +1,4 @@
-﻿using Application.Workspaces.Create;
-using Application.Workspaces.Delete;
+﻿using Application.Workspaces.Delete;
 using MediatR;
 using SharedKernel;
 using Web.Api.Extensions;
@@ -11,7 +10,7 @@ internal sealed class Delete : IEndpoint
 {
     public void MapEndpoint(IEndpointRouteBuilder app)
     {
-        app.MapDelete("workspace/{id}", async (Guid id,ISender sender, CancellationToken cancellationToken) =>
+        app.MapDelete("workspace/{id}", async (Guid id, ISender sender, CancellationToken cancellationToken) =>
         {
             var command = new DeleteWorkspaceCommand(id);
 
@@ -19,6 +18,8 @@ internal sealed class Delete : IEndpoint
 
             return result.Match(Results.NoContent, CustomResults.Problem);
         })
+        .WithName("Delete Workspace")
+        .WithSummary("Delete workspace by ID")
         .RequireAuthorization()
         .WithTags(Tags.Workspaces);
     }

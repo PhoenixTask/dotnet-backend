@@ -9,7 +9,7 @@ namespace Web.Api.Endpoints.Users;
 
 internal sealed class Update : IEndpoint
 {
-    public sealed record Request(string? FirstName ,string? LastName);
+    public sealed record Request(string? FirstName, string? LastName);
     public void MapEndpoint(IEndpointRouteBuilder app)
     {
         app.MapPut("user", async (Request request, ISender sender, CancellationToken cancellationToken) =>
@@ -20,6 +20,8 @@ internal sealed class Update : IEndpoint
 
             return result.Match(Results.NoContent, CustomResults.Problem);
         })
+        .WithName("Update User")
+        .WithSummary("Update current user profile information")
         .RequireAuthorization()
         .WithTags(Tags.Users);
     }

@@ -19,6 +19,8 @@ internal sealed class GetById : IEndpoint
 
             return result.Match(Results.Ok, CustomResults.Problem);
         })
+        .WithName("Get Workspace By ID")
+        .WithSummary("Get workspace information by ID")
         .RequireAuthorization()
         .WithTags(Tags.Workspaces);
     }
