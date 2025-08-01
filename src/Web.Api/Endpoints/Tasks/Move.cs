@@ -16,6 +16,8 @@ public sealed class Move : IEndpoint
 
             return result.Match(Results.NoContent, CustomResults.Problem);
         })
+        .WithName("Move Task")
+        .WithSummary("Move task to a different board with new order")
        .RequireAuthorization()
        .WithTags(Tags.Tasks);
     }
