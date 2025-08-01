@@ -21,6 +21,8 @@ internal sealed class Set : IEndpoint
 
             return result.Match(Results.NoContent, CustomResults.Problem);
         })
+        .WithName("Store Setting")
+        .WithSummary("Create or update user setting")
         .RequireAuthorization()
         .WithTags(Tags.Settings);
     }
