@@ -8,10 +8,10 @@ namespace Web.Api.Endpoints.Projects;
 
 internal sealed class Update : IEndpoint
 {
-    public sealed record Request(string Name,string Color);
+    public sealed record Request(string Name, string Color);
     public void MapEndpoint(IEndpointRouteBuilder app)
     {
-        app.MapPut("project/{Id}", async (Guid Id , Request request ,ISender sender, CancellationToken cancellationToken) =>
+        app.MapPut("project/{Id}", async (Guid Id, Request request, ISender sender, CancellationToken cancellationToken) =>
         {
             var command = new UpdateProjectCommand(
                 Id,
@@ -22,6 +22,8 @@ internal sealed class Update : IEndpoint
 
             return result.Match(Results.NoContent, CustomResults.Problem);
         })
+        .WithName("Update Project")
+        .WithSummary("Update specific project name and colors")
         .RequireAuthorization()
         .WithTags(Tags.Projects);
     }
