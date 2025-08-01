@@ -8,7 +8,6 @@ namespace Web.Api.Endpoints.Tasks;
 
 internal sealed class GetByDate : IEndpoint
 {
-
     public void MapEndpoint(IEndpointRouteBuilder app)
     {
         app.MapGet("task/get-by-deadline", async (Guid ProjectId, DateTime Start, DateTime End, ISender sender, CancellationToken cancellationToken) =>
@@ -19,6 +18,8 @@ internal sealed class GetByDate : IEndpoint
 
             return result.Match(Results.Ok, CustomResults.Problem);
         })
+        .WithName("Get Tasks By Date Range")
+        .WithSummary("Get tasks within a date range for a project")
         .RequireAuthorization()
         .WithTags(Tags.Tasks);
     }
