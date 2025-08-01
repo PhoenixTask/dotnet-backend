@@ -21,6 +21,8 @@ internal sealed class UpdateTaskOrder : IEndpoint
 
             return result.Match(Results.NoContent, CustomResults.Problem);
         })
+        .WithName("Update Task Order")
+        .WithSummary("Update task order within a board")
        .RequireAuthorization()
        .WithTags(Tags.Tasks);
 
@@ -30,6 +32,8 @@ internal sealed class UpdateTaskOrder : IEndpoint
 
             return result.Match(Results.NoContent, CustomResults.Problem);
         })
+        .WithName("Update Tasks Order")
+        .WithSummary("Update list of tasks order")
         .RequireAuthorization()
         .HasApiVersion(2)
         .WithTags(Tags.Tasks);
