@@ -11,7 +11,7 @@ using SharedKernel;
 
 namespace Application.Boards.GetBoardTask;
 
-internal sealed class GetBoardTaskQueryHandler(IApplicationDbContext context,IUserContext userContext,ISender sender) : IQueryHandler<GetBoardTaskQuery, PaginatedResponse<BoardResponse>>
+internal sealed class GetBoardTaskQueryHandler(IApplicationDbContext context, IUserContext userContext, ISender sender) : IQueryHandler<GetBoardTaskQuery, PaginatedResponse<BoardResponse>>
 {
     public async Task<Result<PaginatedResponse<BoardResponse>>> Handle(GetBoardTaskQuery request, CancellationToken cancellationToken)
     {
@@ -19,7 +19,7 @@ internal sealed class GetBoardTaskQueryHandler(IApplicationDbContext context,IUs
 
         bool projectExist = await context.Projects.AnyAsync(x => x.Id == request.ProjectId, cancellationToken);
 
-        if(!projectExist)
+        if (!projectExist)
         {
             return Result.Failure<PaginatedResponse<BoardResponse>>(ProjectErrors.NotFound(request.ProjectId));
         }
@@ -35,33 +35,24 @@ internal sealed class GetBoardTaskQueryHandler(IApplicationDbContext context,IUs
             .Include(x => x.Tasks)
             .AsNoTracking()
             .Where(x => x.Project.Id == request.ProjectId)
-            .Select(x => ToBoardResponse(x))
+            .Select(x => new BoardResponse
+            {
+                Color = x.Color,
+                Id = x.Id,
+                IsArchive = x.IsArchive,
+                Name = x.Name,
+                Order = x.Order,
+                TaskResponses = x.Tasks.Select(t => new TaskResponse
+                {
+                    Id = t.Id,
+                    DeadLine = t.DeadLine.GetValueOrDefault().ToString(CultureInfo.CurrentCulture),
+                    Description = t.Description,
+                    Name = t.Name,
+                    Order = t.Order,
+                    Priority = t.Priority,
+                    IsComplete = t.IsComplete
+                }).ToList()
+            })
             .ToPagedAsync(request, cancellationToken);
-    }
-
-    private static BoardResponse ToBoardResponse(Board x)
-    {
-        return new BoardResponse
-        {
-            Color = x.Color,
-            Id = x.Id,
-            IsArchive = x.IsArchive,
-            Name = x.Name,
-            Order = x.Order,
-            TaskResponses = ToTaskResponseList(x)
-        };
-    }
-    private static List<TaskResponse> ToTaskResponseList(Board x) 
-    {
-        return x.Tasks.Select(t => new TaskResponse
-        {
-            Id = t.Id,
-            DeadLine = t.DeadLine.GetValueOrDefault().ToString(new CultureInfo("en-US")),
-            Description = t.Description,
-            Name = t.Name,
-            Order = t.Order,
-            Priority = t.Priority,
-            IsComplete = t.IsComplete
-        }).Take(5).ToList();
     }
 }
