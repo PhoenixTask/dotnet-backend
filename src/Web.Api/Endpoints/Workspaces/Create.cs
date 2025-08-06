@@ -8,13 +8,13 @@ namespace Web.Api.Endpoints.Workspaces;
 
 internal sealed class Create : IEndpoint
 {
-    public sealed record Request(string Name, string Description);
+    public sealed record Request(string Name, string Color);
 
     public void MapEndpoint(IEndpointRouteBuilder app)
     {
-        app.MapPost("workspace/", async (Request request ,ISender sender, CancellationToken cancellationToken) =>
+        app.MapPost("workspace/", async (Request request, ISender sender, CancellationToken cancellationToken) =>
         {
-            var command = new CreateWorkspaceCommand(request.Name, request.Description);
+            var command = new CreateWorkspaceCommand(request.Name, request.Color);
 
             Result<Guid> result = await sender.Send(command, cancellationToken);
 
