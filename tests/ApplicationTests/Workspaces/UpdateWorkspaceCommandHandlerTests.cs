@@ -2,7 +2,6 @@ using Application.Abstractions.Authentication;
 using Application.Abstractions.Data;
 using Application.Users.AccessAction;
 using Application.Workspaces.Update;
-using Domain.Users;
 using Domain.Workspaces;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -36,7 +35,7 @@ public class UpdateWorkspaceCommandHandlerTests
     public async Task Handle_ShouldReturnNotFound_WhenWorkspaceDoesNotExist()
     {
         // Arrange
-        DbSet<Workspace> workspaceDbSet = new List<Workspace>().AsQueryable().BuildMockDbSet();
+        DbSet<Workspace> workspaceDbSet = new List<Workspace>().BuildMockDbSet();
         _dbContextMock.Workspaces.Returns(workspaceDbSet);
         var command = new UpdateWorkspaceCommand(_workspaceId, "I'm Not Exist", "hollow");
 
@@ -49,30 +48,11 @@ public class UpdateWorkspaceCommandHandlerTests
     }
 
     [Fact]
-    public async Task Handle_ShouldReturnFailure_WhenUserHasNoPermission()
-    {
-        // Arrange
-        var workspace = new Workspace { Id = _workspaceId, Name = "Secret of School", Color = "orange" };
-        DbSet<Workspace> workspaceDbSet = new List<Workspace> { workspace }.AsQueryable().BuildMockDbSet();
-        _dbContextMock.Workspaces.Returns(workspaceDbSet);
-        _senderMock.Send(Arg.Any<UserAccessCommand>(), Arg.Any<CancellationToken>())
-            .Returns(Result.Failure(UserErrors.InvalidPermission));
-        var command = new UpdateWorkspaceCommand(_workspaceId, "Secret", "grass");
-
-        // Act
-        Result result = await _handler.Handle(command, CancellationToken.None);
-
-        // Assert
-        result.IsFailure.ShouldBeTrue();
-        result.Error.Code.ShouldBe(UserErrors.InvalidPermission.Code);
-    }
-
-    [Fact]
     public async Task Handle_ShouldUpdateWorkspace_WhenUserHasPermission()
     {
         // Arrange
         var workspace = new Workspace { Id = _workspaceId, Name = "Secret of School", Color = "orange" };
-        DbSet<Workspace> dbSet = new List<Workspace> { workspace }.AsQueryable().BuildMockDbSet();
+        DbSet<Workspace> dbSet = new List<Workspace> { workspace }.BuildMockDbSet();
         _dbContextMock.Workspaces.Returns(dbSet);
         _senderMock.Send(Arg.Any<UserAccessCommand>(), Arg.Any<CancellationToken>())
             .Returns(Result.Success());

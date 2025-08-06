@@ -30,7 +30,7 @@ public class LoginUserCommandHandlerTests
     public async Task Handle_ShouldReturnFailure_WhenUserDoesNotExist()
     {
         // Arrange
-        DbSet<User> emptyUsers = new List<User>().AsQueryable().BuildMockDbSet();
+        DbSet<User> emptyUsers = new List<User>().BuildMockDbSet();
         _dbContextMock.Users.Returns(emptyUsers);
 
         var command = new LoginUserCommand("NoErfan", "password");
@@ -54,7 +54,7 @@ public class LoginUserCommandHandlerTests
             PasswordHash = "some-hashed-password"
         };
 
-        DbSet<User> mockUsers = new List<User> { user }.AsQueryable().BuildMockDbSet();
+        DbSet<User> mockUsers = new List<User> { user }.BuildMockDbSet();
         _dbContextMock.Users.Returns(mockUsers);
 
         var command = new LoginUserCommand("Erfan", "wrong-password");
@@ -80,7 +80,7 @@ public class LoginUserCommandHandlerTests
             PasswordHash = "correct-hash"
         };
 
-        DbSet<User> mockUsers = new List<User> { user }.AsQueryable().BuildMockDbSet();
+        DbSet<User> mockUsers = new List<User> { user }.BuildMockDbSet();
         _dbContextMock.Users.Returns(mockUsers);
 
         var command = new LoginUserCommand("Erfan", "secret");
@@ -107,7 +107,7 @@ public class LoginUserCommandHandlerTests
             PasswordHash = "hash"
         };
 
-        DbSet<User> mockUsers = new List<User> { user }.AsQueryable().BuildMockDbSet();
+        DbSet<User> mockUsers = new List<User> { user }.BuildMockDbSet();
         _dbContextMock.Users.Returns(mockUsers);
 
         var command = new LoginUserCommand("MiXeDcAsE", "pw");

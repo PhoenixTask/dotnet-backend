@@ -36,9 +36,9 @@ public class GetWorkspacesQueryHandlerTests
         FieldInfo? fieldInfo = ownedWorkspace.GetType().GetField("<CreatedById>k__BackingField",
             BindingFlags.Instance | BindingFlags.NonPublic);
         fieldInfo!.SetValue(ownedWorkspace, _userId);
-        DbSet<Workspace> workspaces = new List<Workspace> { ownedWorkspace }.AsQueryable().BuildMockDbSet();
+        DbSet<Workspace> workspaces = new List<Workspace> { ownedWorkspace }.BuildMockDbSet();
         _dbContextMock.Workspaces.Returns(workspaces);
-        DbSet<TeamMember> teamMemberDbSet = new List<TeamMember>().AsQueryable().BuildMockDbSet();
+        DbSet<TeamMember> teamMemberDbSet = new List<TeamMember>().BuildMockDbSet();
         _dbContextMock.Members.Returns(teamMemberDbSet);
 
         // Act
@@ -55,9 +55,9 @@ public class GetWorkspacesQueryHandlerTests
         // Arrange
         var sharedWorkspace = new Workspace { Id = Guid.NewGuid(), Name = "Shared", Color = "gold" };
         var teamMember = new TeamMember { UserId = _userId, Workspace = sharedWorkspace };
-        DbSet<Workspace> workspaceDbSet = new List<Workspace>().AsQueryable().BuildMockDbSet();
+        DbSet<Workspace> workspaceDbSet = new List<Workspace>().BuildMockDbSet();
         _dbContextMock.Workspaces.Returns(workspaceDbSet);
-        DbSet<TeamMember> teamMemberDbSet = new List<TeamMember> { teamMember }.AsQueryable().BuildMockDbSet();
+        DbSet<TeamMember> teamMemberDbSet = new List<TeamMember> { teamMember }.BuildMockDbSet();
         _dbContextMock.Members.Returns(teamMemberDbSet);
 
         // Act

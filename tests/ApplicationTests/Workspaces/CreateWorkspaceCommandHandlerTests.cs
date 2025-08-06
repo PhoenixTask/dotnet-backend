@@ -25,7 +25,7 @@ public class CreateWorkspaceCommandHandlerTests
     public async Task Handle_ShouldCreateWorkspace_WhenDataIsValid()
     {
         // Arrange
-        DbSet<Workspace> workspaces = new List<Workspace>().AsQueryable().BuildMockDbSet();
+        DbSet<Workspace> workspaces = new List<Workspace>().BuildMockDbSet();
         _dbContextMock.Workspaces.Returns(workspaces);
         var command = new CreateWorkspaceCommand("My Universe", "sky");
 

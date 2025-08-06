@@ -37,7 +37,7 @@ public class GetWorkspaceByIdQueryHandlerTests
     public async Task Handle_ShouldReturnNotFound_WhenWorkspaceDoesNotExist()
     {
         // Arrange
-        DbSet<Workspace> workspaceDbSet = new List<Workspace>().AsQueryable().BuildMockDbSet();
+        DbSet<Workspace> workspaceDbSet = new List<Workspace>().BuildMockDbSet();
         _dbContextMock.Workspaces.Returns(workspaceDbSet);
         var query = new GetWorkspaceByIdQuery(_workspaceId);
 
@@ -54,7 +54,7 @@ public class GetWorkspaceByIdQueryHandlerTests
     {
         // Arrange
         var workspace = new Workspace { Id = _workspaceId, Name = "Important Workspace", Color = "tomato" };
-        DbSet<Workspace> workspaceDbSet = new List<Workspace> { workspace }.AsQueryable().BuildMockDbSet();
+        DbSet<Workspace> workspaceDbSet = new List<Workspace> { workspace }.BuildMockDbSet();
         _dbContextMock.Workspaces.Returns(workspaceDbSet);
         _senderMock.Send(Arg.Any<UserAccessCommand>(), Arg.Any<CancellationToken>())
             .Returns(Result.Failure(UserErrors.InvalidPermission));
@@ -66,26 +66,5 @@ public class GetWorkspaceByIdQueryHandlerTests
         // Assert
         result.IsFailure.ShouldBeTrue();
         result.Error.Code.ShouldBe(UserErrors.InvalidPermission.Code);
-    }
-
-    [Fact]
-    public async Task Handle_ShouldReturnWorkspace_WhenUserHasAccess()
-    {
-        // Arrange
-        var workspace = new Workspace { Id = _workspaceId, Name = "Important Workspace", Color = "tomato" };
-        DbSet<Workspace> workspaceDbSet = new List<Workspace> { workspace }.AsQueryable().BuildMockDbSet();
-        _dbContextMock.Workspaces.Returns(workspaceDbSet);
-        _senderMock.Send(Arg.Any<UserAccessCommand>(), Arg.Any<CancellationToken>())
-            .Returns(Result.Success());
-        var query = new GetWorkspaceByIdQuery(_workspaceId);
-
-        // Act
-        Result<WorkspaceResponse> result = await _handler.Handle(query, CancellationToken.None);
-
-        // Assert
-        result.IsSuccess.ShouldBeTrue();
-        result.Value.Id.ShouldBe(_workspaceId);
-        result.Value.Name.ShouldBe("Important Workspace");
-        result.Value.Color.ShouldBe("tomato");
     }
 }

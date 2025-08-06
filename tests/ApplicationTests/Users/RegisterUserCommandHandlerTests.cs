@@ -31,11 +31,11 @@ public class RegisterUserCommandHandlerTests
         DbSet<User> existingUsers = new List<User>
     {
         new() { Email = "existing@email.com" }
-    }.AsQueryable().BuildMockDbSet();
+    }.BuildMockDbSet();
 
         _dbContextMock.Users.Returns(existingUsers);
 
-        var command = new RegisterUserCommand("NewUser","existing@email.com", "Password123",string.Empty,string.Empty);
+        var command = new RegisterUserCommand("NewUser", "existing@email.com", "Password123", string.Empty, string.Empty);
 
         // Act
         Result<Guid> result = await _handler.Handle(command, CancellationToken.None);
@@ -52,7 +52,7 @@ public class RegisterUserCommandHandlerTests
         DbSet<User> existingUsers = new List<User>
     {
         new() { NormalizedUserName = "TAKENUSERNAME" }
-    }.AsQueryable().BuildMockDbSet();
+    }.BuildMockDbSet();
 
         _dbContextMock.Users.Returns(existingUsers);
 
@@ -70,10 +70,10 @@ public class RegisterUserCommandHandlerTests
     public async Task Handle_ShouldRegisterUser_WhenDataIsValid()
     {
         // Arrange
-        DbSet<User> usersDbSet = new List<User>().AsQueryable().BuildMockDbSet();
+        DbSet<User> usersDbSet = new List<User>().BuildMockDbSet();
         _dbContextMock.Users.Returns(usersDbSet);
 
-        var command = new RegisterUserCommand("NewUser","newuser@example.com", "SecretPassword", string.Empty, string.Empty);
+        var command = new RegisterUserCommand("NewUser", "newuser@example.com", "SecretPassword", string.Empty, string.Empty);
 
         _passwordHasherMock.Hash("SecretPassword").Returns("hashed-password");
 
