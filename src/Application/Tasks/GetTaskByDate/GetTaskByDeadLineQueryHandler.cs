@@ -21,7 +21,7 @@ internal sealed class GetTaskByDeadLineQueryHandler(IApplicationDbContext contex
             .Where(x => x.CreatedById == userContext.UserId)
             .Select(x => new TaskResponse
             {
-                DeadLine = x.DeadLine.GetValueOrDefault().ToString(new CultureInfo("en-US")),
+                DeadLine = x.DeadLine.GetValueOrDefault().ToString(CultureInfo.CurrentCulture),
                 Id = x.Id,
                 IsComplete = x.IsComplete,
                 Name = x.Name,
