@@ -49,7 +49,7 @@ internal sealed class SearchTaskByProjectQueryHandler(
                     .Select(t => new TaskResponse
                     {
                         Id = t.Id,
-                        DeadLine = t.DeadLine.GetValueOrDefault().ToString("yyyy-MM-dd", CultureInfo.InvariantCulture),
+                        DeadLine = t.DeadLine.GetValueOrDefault().ToString(new CultureInfo("en-US")),
                         Description = t.Description,
                         Name = t.Name,
                         Order = t.Order,

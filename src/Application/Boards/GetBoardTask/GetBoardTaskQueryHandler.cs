@@ -45,7 +45,7 @@ internal sealed class GetBoardTaskQueryHandler(IApplicationDbContext context, IU
                 TaskResponses = x.Tasks.Select(t => new TaskResponse
                 {
                     Id = t.Id,
-                    DeadLine = t.DeadLine.GetValueOrDefault().ToString(CultureInfo.CurrentCulture),
+                    DeadLine = t.DeadLine.GetValueOrDefault().ToString(new CultureInfo("en-US")),
                     Description = t.Description,
                     Name = t.Name,
                     Order = t.Order,

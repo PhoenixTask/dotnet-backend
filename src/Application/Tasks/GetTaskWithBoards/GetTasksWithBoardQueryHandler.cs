@@ -18,7 +18,7 @@ internal sealed class GetTasksWithBoardQueryHandler(IApplicationDbContext contex
                {
                    BoardId = x.BoardId,
                    BoardName = x.Board.Name,
-                   DeadLine = x.DeadLine.GetValueOrDefault().ToString(CultureInfo.CurrentCulture),
+                   DeadLine = x.DeadLine.GetValueOrDefault().ToString(new CultureInfo("en-US")),
                    Name = x.Name,
                    Id = x.Id,
                    IsComplete = x.IsComplete,
