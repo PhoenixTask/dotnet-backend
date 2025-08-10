@@ -8,7 +8,7 @@ namespace Web.Api.Endpoints.Boards;
 
 internal sealed class Create : IEndpoint
 {
-    public sealed record Request(Guid ProjectId, string Name, string Color, int Order);
+    public sealed record Request(Guid ProjectId, string Name, string Color);
     public void MapEndpoint(IEndpointRouteBuilder app)
     {
         app.MapPost("board/", async (Request request, ISender sender, CancellationToken cancellationToken) =>
