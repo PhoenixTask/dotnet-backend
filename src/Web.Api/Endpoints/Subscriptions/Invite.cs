@@ -10,7 +10,7 @@ namespace Web.Api.Endpoints.Subscriptions;
 
 internal sealed class Invite : IEndpoint
 {
-    public sealed record Request(string Email, Guid WorkspaceId, ProjectRole Role);
+    public sealed record Request(string Email, Guid WorkspaceId, Role Role);
     public void MapEndpoint(IEndpointRouteBuilder app)
     {
         app.MapPost("workspace/invite", async (Request request, ISender sender, CancellationToken cancellationToken) =>
