@@ -1,32 +1,28 @@
 ﻿using System.Globalization;
-using System.Linq.Expressions;
-using Application.Abstractions.Authentication;
 using Application.Abstractions.Data;
 using Application.Abstractions.Messaging;
 using Application.Boards.GetBoardTask;
-using Application.Users.AccessAction;
 using Domain.Projects;
-using MediatR;
 using Microsoft.EntityFrameworkCore;
 using SharedKernel;
 
 namespace Application.Tasks.Search;
 
 internal sealed class SearchTaskByProjectQueryHandler(
-    IApplicationDbContext context,
-    IUserContext userContext,
-    ISender sender
+    IApplicationDbContext context
 ) : IQueryHandler<SearchTaskByProjectQuery, List<BoardResponse>>
 {
     public async Task<Result<List<BoardResponse>>> Handle(SearchTaskByProjectQuery request, CancellationToken cancellationToken)
     {
-        Guid userId = userContext.UserId;
+        Guid workspaceId = await context.Projects
+            .AsNoTracking()
+            .Where(x => x.Id == request.ProjectId)
+            .Select(x => x.Workspace.Id)
+            .SingleOrDefaultAsync(cancellationToken);
 
-        var accessRequest = new UserAccessCommand(userId, request.ProjectId, typeof(Project));
-        Result hasAccess = await sender.Send(accessRequest, cancellationToken);
-        if (hasAccess.IsFailure)
+        if (workspaceId.Equals(Guid.Empty))
         {
-            return Result.Failure<List<BoardResponse>>(hasAccess.Error);
+            return Result.Failure<List<BoardResponse>>(ProjectErrors.NotFound(request.ProjectId));
         }
 
         string parameter = request.Parameter?.Trim() ?? string.Empty;
