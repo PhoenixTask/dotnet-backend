@@ -1,42 +1,32 @@
-﻿using Application.Abstractions.Authentication;
-using Application.Abstractions.Data;
+﻿using Application.Abstractions.Data;
 using Application.Abstractions.Messaging;
-using Application.Users.AccessAction;
+using Application.Users.Access;
 using Application.Workspaces.Get;
+using Domain.Subscriptions;
 using Domain.Workspaces;
-using MediatR;
 using Microsoft.EntityFrameworkCore;
 using SharedKernel;
 
 namespace Application.Workspaces.GetById;
 
-internal sealed class GetWorkspaceByIdQueryHandler(IUserContext userContext, ISender sender, IApplicationDbContext context) : IQueryHandler<GetWorkspaceByIdQuery, WorkspaceResponse>
+internal sealed class GetWorkspaceByIdQueryHandler(IUserAccess userAccess, IApplicationDbContext context) : IQueryHandler<GetWorkspaceByIdQuery, WorkspaceResponse>
 {
     public async Task<Result<WorkspaceResponse>> Handle(GetWorkspaceByIdQuery request, CancellationToken cancellationToken)
     {
-        bool workspaceExists = await context.Workspaces
-            .AnyAsync(x => x.Id == request.WorkspaceId, cancellationToken);
+        WorkspaceResponse? workspace = await context.Members
+            .AsNoTracking()
+            .Include(x => x.Workspace)
+            .Where(x => x.WorkspaceId == request.WorkspaceId)
+            .Select(x => new WorkspaceResponse(x.Workspace.Id, x.Workspace.Name, x.Workspace.Color))
+            .SingleOrDefaultAsync(cancellationToken);
 
-        if (!workspaceExists)
+        bool hasAccess = await userAccess.IsAuthenticatedAsync(request.WorkspaceId, Role.Owner);
+
+        if (workspace is null || !hasAccess)
         {
             return Result.Failure<WorkspaceResponse>(WorkspaceErrors.NotFound(request.WorkspaceId));
         }
 
-        UserAccessCommand accessRequest = new(userContext.UserId, request.WorkspaceId, typeof(Workspace));
-        Result accessResult = await sender.Send(accessRequest, cancellationToken);
-        if (accessResult.IsFailure)
-        {
-            return Result.Failure<WorkspaceResponse>(accessResult.Error);
-        }
-
-        return await context.Workspaces
-            .AsNoTracking()
-            .Select(x => new WorkspaceResponse
-            {
-                Id = x.Id,
-                Color = x.Color,
-                Name = x.Name,
-            })
-            .SingleAsync(x => x.Id == request.WorkspaceId, cancellationToken);
+        return workspace;
     }
 }
