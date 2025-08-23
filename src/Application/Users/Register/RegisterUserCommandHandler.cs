@@ -12,13 +12,13 @@ internal sealed class RegisterUserCommandHandler(IApplicationDbContext context, 
 {
     public async Task<Result<Guid>> Handle(RegisterUserCommand command, CancellationToken cancellationToken)
     {
-        string email = command.Email.ToLower(System.Globalization.CultureInfo.CurrentCulture);
+        string email = command.Email.ToUpperInvariant();
         if (await context.Users.AnyAsync(u => u.Email == email, cancellationToken))
         {
             return Result.Failure<Guid>(UserErrors.EmailNotUnique);
         }
 
-        string userName = command.Username.ToUpper(System.Globalization.CultureInfo.CurrentCulture);
+        string userName = command.Username.ToUpperInvariant();
         if (await context.Users.AnyAsync(u => u.NormalizedUserName == userName, cancellationToken))
         {
             return Result.Failure<Guid>(UserErrors.UsernameNotUnique);
@@ -35,7 +35,7 @@ internal sealed class RegisterUserCommandHandler(IApplicationDbContext context, 
             LastName = command.LastName
         };
 
-        user.Raise(new UserRegisteredDomainEvent(user.Id));
+        user.Raise(new UserRegisteredDomainEvent(user));
 
         context.Users.Add(user);
 

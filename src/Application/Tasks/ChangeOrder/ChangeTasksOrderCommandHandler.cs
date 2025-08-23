@@ -1,31 +1,34 @@
-﻿using Application.Abstractions.Data;
+﻿using Application.Abstractions.Authentication;
+using Application.Abstractions.Data;
 using Application.Abstractions.Messaging;
 using FluentValidation;
 using Microsoft.EntityFrameworkCore;
 using SharedKernel;
-
+using Task = Domain.Tasks.Task;
 namespace Application.Tasks.ChangeOrder;
 
 internal sealed class ChangeTasksOrderCommandHandler
-    (IApplicationDbContext context) : ICommandHandler<ChangeTasksOrderCommand>
+    (IApplicationDbContext context, IUserContext userContext) : ICommandHandler<ChangeTasksOrderCommand>
 {
     public async Task<Result> Handle(ChangeTasksOrderCommand request, CancellationToken cancellationToken)
     {
-        var taskIds = request.Tasks.Select(x => x.Id).ToList();
+        var taskIds = request.Tasks.ToDictionary(r => r.Id);
 
-        List<Domain.Tasks.Task> tasks = await context.Tasks
-            .Where(t => taskIds.Contains(t.Id))
+        List<Task> tasks = await context.Members
+            .Include(x => x.Workspace)
+            .ThenInclude(x => x.Projects)
+            .ThenInclude(x => x.Boards)
+            .ThenInclude(x => x.Tasks)
+            .Where(x => x.UserId == userContext.UserId)
+            .SelectMany(x => x.Workspace.Projects)
+            .SelectMany(x => x.Boards)
+            .SelectMany(x => x.Tasks)
+            .Where(x => taskIds.Keys.Contains(x.Id))
             .ToListAsync(cancellationToken);
 
-        foreach (Domain.Tasks.Task task in tasks)
+        foreach (Task task in tasks)
         {
-            int? newOrder = request.Tasks
-                .FirstOrDefault(x => x.Id == task.Id)?.Order;
-
-            if (newOrder.HasValue)
-            {
-                task.Order = newOrder.Value;
-            }
+            task.Order = taskIds[task.Id].Order;
         }
 
         await context.SaveChangesAsync(cancellationToken);

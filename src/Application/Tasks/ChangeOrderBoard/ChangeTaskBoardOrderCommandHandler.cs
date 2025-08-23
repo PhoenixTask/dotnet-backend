@@ -1,36 +1,51 @@
-﻿using Application.Abstractions.Data;
+﻿using Application.Abstractions.Authentication;
+using Application.Abstractions.Data;
 using Application.Abstractions.Messaging;
-using Domain.Tasks;
 using Microsoft.EntityFrameworkCore;
 using SharedKernel;
+using Task = Domain.Tasks.Task;
 
 namespace Application.Tasks.ChangeOrderBoard;
 
 internal sealed class ChangeTaskBoardOrderCommandHandler
-    (IApplicationDbContext context) : ICommandHandler<ChangeTaskBoardOrderCommand>
+    (IApplicationDbContext context, IUserContext userContext) : ICommandHandler<ChangeTaskBoardOrderCommand>
 {
     public async Task<Result> Handle(ChangeTaskBoardOrderCommand request, CancellationToken cancellationToken)
     {
-        var taskIds = request.TaskRequests.Select(t => t.TaskId).ToList();
+        var taskIds = request.TaskRequests.ToDictionary(r => r.TaskId);
 
-        List<Domain.Tasks.Task> tasks = await context.Tasks
-            .Where(t => taskIds.Contains(t.Id))
-            .ToListAsync(cancellationToken);
+        Guid[] accessibleBoardIds = await context.Members
+            .Include(x => x.Workspace)
+            .ThenInclude(x => x.Projects)
+            .ThenInclude(x => x.Boards)
+            .Where(x => x.UserId == userContext.UserId)
+            .SelectMany(x => x.Workspace.Projects)
+            .SelectMany(x => x.Boards)
+            .Select(b => b.Id)
+            .Where(x => taskIds.Values.Select(a => a.BoardId).Contains(x))
+            .ToArrayAsync(cancellationToken);
 
-        if (tasks.Count != request.TaskRequests.Count)
+        taskIds = taskIds.Where(x => accessibleBoardIds.Contains(x.Value.BoardId)).ToDictionary();
+
+        Task[] tasks = await context.Members
+            .Include(x => x.Workspace)
+            .ThenInclude(x => x.Projects)
+            .ThenInclude(x => x.Boards)
+            .ThenInclude(x => x.Tasks)
+            .Where(x => x.UserId == userContext.UserId)
+            .SelectMany(x => x.Workspace.Projects)
+            .SelectMany(x => x.Boards)
+            .SelectMany(x => x.Tasks)
+            .Where(x => taskIds.Keys.Contains(x.Id))
+            .ToArrayAsync(cancellationToken);
+
+        foreach (Task task in tasks)
         {
-            Guid missingId = taskIds.Except(tasks.Select(t => t.Id)).First();
-            return Result.Failure(TaskErrors.NotFound(missingId));
+            task.Order = taskIds[task.Id].Order;
+            task.BoardId = taskIds[task.Id].BoardId;
         }
 
-        foreach (TaskRequest taskRequest in request.TaskRequests)
-        {
-            Domain.Tasks.Task task = tasks.First(t => t.Id == taskRequest.TaskId);
-            task.BoardId = taskRequest.BoardId;
-            task.Order = taskRequest.Order;
-        }
         await context.SaveChangesAsync(cancellationToken);
         return Result.Success();
-        throw new NotImplementedException();
     }
 }

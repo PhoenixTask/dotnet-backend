@@ -14,12 +14,7 @@ internal sealed class UploadProfile : IEndpoint
     {
         app.MapPost("user/upload", async (Request request, IUserContext userContext, ISender sender, CancellationToken cancellationToken) =>
         {
-            var command = new UploadProfileCommand
-            {
-                Base64File = request.Base64File,
-                UserId = userContext.UserId,
-                FileName = request.FileName,
-            };
+            var command = new UploadProfileCommand(request.Base64File, request.FileName);
 
             Result result = await sender.Send(command, cancellationToken);
 

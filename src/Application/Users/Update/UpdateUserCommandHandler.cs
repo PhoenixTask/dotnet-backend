@@ -11,12 +11,11 @@ internal sealed class UpdateUserCommandHandler(
 {
     public async Task<Result> Handle(UpdateUserCommand request, CancellationToken cancellationToken)
     {
-        Guid userId = userContext.UserId;
-        User? user = await context.Users.SingleOrDefaultAsync(x => x.Id == userId, cancellationToken);
+        User? user = await context.Users.SingleOrDefaultAsync(x => x.Id == userContext.UserId, cancellationToken);
 
         if (user is null)
         {
-            return Result.Failure(UserErrors.NotFound(userId));
+            return Result.Failure(UserErrors.NotFound(userContext.UserId));
         }
         if (!string.IsNullOrWhiteSpace(request.FirstName))
         {

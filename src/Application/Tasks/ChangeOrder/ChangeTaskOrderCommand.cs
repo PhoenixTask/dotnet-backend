@@ -2,4 +2,4 @@
 
 
 namespace Application.Tasks.ChangeOrder;
-public sealed record ChangeTaskOrderCommand(Guid TaskId,int Order) : ICommand;
+public sealed record ChangeTaskOrderCommand(Guid TaskId, int Order) : ICommand;

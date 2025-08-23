@@ -11,9 +11,8 @@ internal sealed class GetSettingsQueryHandler(
 {
     public async Task<Result<Dictionary<string, string>>> Handle(GetSettingsQuery request, CancellationToken cancellationToken)
     {
-        Guid userId = userContext.UserId;
-        Dictionary<string, string> settings =await context.Settings
-            .Where(x => x.CreatedById == userId).ToDictionaryAsync(x=>x.Key,x=>x.Value,cancellationToken);
+        Dictionary<string, string> settings = await context.Settings
+            .Where(x => x.CreatedById == userContext.UserId).ToDictionaryAsync(x => x.Key, x => x.Value, cancellationToken);
         return settings;
     }
 }

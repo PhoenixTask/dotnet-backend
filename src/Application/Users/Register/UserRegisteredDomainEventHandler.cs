@@ -1,13 +1,20 @@
-﻿using Domain.Users;
+﻿using Application.Abstractions.Emails;
+using Domain.Users;
 using MediatR;
 
 namespace Application.Users.Register;
 
-internal sealed class UserRegisteredDomainEventHandler : INotificationHandler<UserRegisteredDomainEvent>
+internal sealed class UserRegisteredDomainEventHandler(IEmailService emailService) : INotificationHandler<UserRegisteredDomainEvent>
 {
-    public Task Handle(UserRegisteredDomainEvent notification, CancellationToken cancellationToken)
+    public async Task Handle(UserRegisteredDomainEvent notification, CancellationToken cancellationToken)
     {
-        // TODO: Send an email verification link, etc.
-        return Task.CompletedTask;
+        try
+        {
+            await emailService.SendEmailAsync(notification.User.Email, "Greeting", "Welcome to PhoenixTask😃");
+        }
+        catch (Exception)
+        {
+            // Send email to new user if email configured properly
+        }
     }
 }

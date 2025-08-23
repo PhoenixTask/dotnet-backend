@@ -1,5 +1,4 @@
-﻿using System.Globalization;
-using Application.Abstractions.Authentication;
+﻿using Application.Abstractions.Authentication;
 using Application.Abstractions.Data;
 using Application.Abstractions.Messaging;
 using Microsoft.EntityFrameworkCore;
@@ -11,17 +10,21 @@ internal sealed class GetTasksQueryHandler(IApplicationDbContext context, IUserC
 {
     public async Task<Result<List<TaskResponse>>> Handle(GetTasksQuery request, CancellationToken cancellationToken)
     {
-        Guid userId = userContext.UserId;
-
-        return await context.Tasks
+        return await context.Members
             .AsNoTracking()
-            .Where(x => x.Board.Id == request.BoardId && x.CreatedById == userId)
-            .OrderBy(x => x.Order)
-            .ThenBy(x => x.Priority)
+            .Include(x => x.Workspace)
+            .ThenInclude(x => x.Projects)
+            .ThenInclude(x => x.Boards)
+            .ThenInclude(x => x.Tasks)
+            .Where(x => x.UserId == userContext.UserId)
+            .SelectMany(x => x.Workspace.Projects)
+            .SelectMany(x => x.Boards)
+            .SelectMany(x => x.Tasks)
+            .Where(x => x.BoardId == request.BoardId)
             .Select(x => new TaskResponse
             {
                 Id = x.Id,
-                DeadLine = x.DeadLine.GetValueOrDefault().ToString(new CultureInfo("en-US")),
+                DeadLine = x.DeadLine.ToString(),
                 Description = x.Description,
                 Name = x.Name,
                 Order = x.Order,

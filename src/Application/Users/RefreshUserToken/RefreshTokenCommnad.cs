@@ -2,4 +2,4 @@
 using Application.Users.Login;
 
 namespace Application.Users.RefreshUserToken;
-public sealed record RefreshTokenCommnad(Guid UserId,string RefreshToken) : ICommand<LoginResponse>;
+public sealed record RefreshTokenCommnad(Guid UserId, string RefreshToken) : ICommand<LoginResponse>;

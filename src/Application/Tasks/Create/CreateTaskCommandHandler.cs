@@ -1,6 +1,6 @@
-﻿using Application.Abstractions.Authentication;
-using Application.Abstractions.Data;
+﻿using Application.Abstractions.Data;
 using Application.Abstractions.Messaging;
+using Application.Users.Access;
 using Domain.Projects;
 using Microsoft.EntityFrameworkCore;
 using SharedKernel;
@@ -9,15 +9,22 @@ using Task = Domain.Tasks.Task;
 namespace Application.Tasks.Create;
 
 internal sealed class CreateTaskCommandHandler(
-    IApplicationDbContext context, IUserContext userContext) : ICommandHandler<CreateTaskCommand, Guid>
+    IApplicationDbContext context, IUserAccess userAccess) : ICommandHandler<CreateTaskCommand, Guid>
 {
     public async Task<Result<Guid>> Handle(CreateTaskCommand request, CancellationToken cancellationToken)
     {
-        Guid userId = userContext.UserId;
         Board? board = await context.Boards
-            .SingleOrDefaultAsync(x => x.Id == request.BoardId && x.CreatedById == userId, cancellationToken: cancellationToken);
+            .Include(x => x.Project)
+            .ThenInclude(x => x.Workspace)
+            .SingleOrDefaultAsync(x => x.Id == request.BoardId, cancellationToken: cancellationToken);
 
         if (board is null)
+        {
+            return Result.Failure<Guid>(BoardErrors.NotFound(request.BoardId));
+        }
+
+        bool hasAccess = await userAccess.IsAuthenticatedAsync(board.Project.Workspace.Id);
+        if (hasAccess)
         {
             return Result.Failure<Guid>(BoardErrors.NotFound(request.BoardId));
         }

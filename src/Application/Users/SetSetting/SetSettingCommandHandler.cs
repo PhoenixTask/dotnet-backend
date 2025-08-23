@@ -12,29 +12,31 @@ internal sealed class SetSettingCommandHandler
 {
     public async Task<Result> Handle(SetSettingCommand request, CancellationToken cancellationToken)
     {
-        Guid userId = userContext.UserId;
-        User? user = await context.Users.SingleOrDefaultAsync(x => x.Id == userId, cancellationToken);
+        User? user = await context.Users.SingleOrDefaultAsync(x => x.Id == userContext.UserId, cancellationToken);
 
         if (user is null)
         {
-            return Result.Failure(UserErrors.NotFound(userId));
+            return Result.Failure(UserErrors.NotFound(userContext.UserId));
         }
+        string key = request.Key.Trim();
+        string value = request.Value.Trim();
+        Setting? setting = await context.Settings
+            .SingleOrDefaultAsync(x => x.Key == key, cancellationToken);
 
-        Setting? setting = await context.Settings.SingleOrDefaultAsync(x => x.Key == request.Key.Trim(), cancellationToken);
         if (setting is null)
         {
             setting = new Setting
             {
                 DisplayName = request.Key,
-                Key = request.Key.Trim(),
-                Value = request.Value.Trim()
+                Key = key,
+                Value = value
             };
 
             await context.Settings.AddAsync(setting, cancellationToken);
         }
         else
         {
-            setting.Value = request.Value.Trim();
+            setting.Value = value;
         }
         await context.SaveChangesAsync(cancellationToken);
 

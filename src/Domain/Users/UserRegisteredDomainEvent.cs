@@ -2,4 +2,4 @@
 
 namespace Domain.Users;
 
-public sealed record UserRegisteredDomainEvent(Guid UserId) : IDomainEvent;
+public sealed record UserRegisteredDomainEvent(User User) : IDomainEvent;

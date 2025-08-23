@@ -1,7 +1,7 @@
-﻿using System.Globalization;
-using Application.Abstractions.Data;
+﻿using Application.Abstractions.Data;
 using Application.Abstractions.Messaging;
 using Application.Boards.GetBoardTask;
+using Application.Users.Access;
 using Domain.Projects;
 using Microsoft.EntityFrameworkCore;
 using SharedKernel;
@@ -9,18 +9,23 @@ using SharedKernel;
 namespace Application.Tasks.Search;
 
 internal sealed class SearchTaskByProjectQueryHandler(
-    IApplicationDbContext context
+    IApplicationDbContext context,
+    IUserAccess userAccess
 ) : IQueryHandler<SearchTaskByProjectQuery, List<BoardResponse>>
 {
     public async Task<Result<List<BoardResponse>>> Handle(SearchTaskByProjectQuery request, CancellationToken cancellationToken)
     {
-        Guid workspaceId = await context.Projects
+        Project? project = await context.Projects
+            .Include(x => x.Workspace)
             .AsNoTracking()
-            .Where(x => x.Id == request.ProjectId)
-            .Select(x => x.Workspace.Id)
-            .SingleOrDefaultAsync(cancellationToken);
+            .SingleOrDefaultAsync(x => x.Id == request.ProjectId, cancellationToken);
+        if (project is null)
+        {
+            return Result.Failure<List<BoardResponse>>(ProjectErrors.NotFound(request.ProjectId));
+        }
 
-        if (workspaceId.Equals(Guid.Empty))
+        bool hasAccess = await userAccess.IsAuthenticatedAsync(project.Workspace.Id);
+        if (!hasAccess)
         {
             return Result.Failure<List<BoardResponse>>(ProjectErrors.NotFound(request.ProjectId));
         }
@@ -45,7 +50,7 @@ internal sealed class SearchTaskByProjectQueryHandler(
                     .Select(t => new TaskResponse
                     {
                         Id = t.Id,
-                        DeadLine = t.DeadLine.GetValueOrDefault().ToString(new CultureInfo("en-US")),
+                        DeadLine = t.DeadLine.ToString(),
                         Description = t.Description,
                         Name = t.Name,
                         Order = t.Order,

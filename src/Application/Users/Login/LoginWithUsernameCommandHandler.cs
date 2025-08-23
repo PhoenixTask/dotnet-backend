@@ -50,7 +50,7 @@ internal sealed class LoginWithUsernameCommandHandler(
         refreshToken.ExpireOnUtc = DateTime.UtcNow.AddDays(7);
 
         await context.SaveChangesAsync(cancellationToken);
-        var response = new LoginResponse { RefreshToken = refresh , Token = token, UserId = user.Id };
+        var response = new LoginResponse(user.Id, token, refresh);
         return response;
     }
 }

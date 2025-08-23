@@ -1,16 +1,32 @@
-﻿using System.Globalization;
-using Application.Abstractions.Data;
+﻿using Application.Abstractions.Data;
 using Application.Abstractions.Messaging;
 using Application.Tasks.GetTaskByDate;
+using Application.Users.Access;
+using Domain.Projects;
 using Microsoft.EntityFrameworkCore;
 using SharedKernel;
 
 namespace Application.Tasks.GetTaskWithBoards;
 
-internal sealed class GetTasksWithBoardQueryHandler(IApplicationDbContext context) : IQueryHandler<GetTasksWithBoardQuery, List<TaskResponse>>
+internal sealed class GetTasksWithBoardQueryHandler(IApplicationDbContext context, IUserAccess userAccess) : IQueryHandler<GetTasksWithBoardQuery, List<TaskResponse>>
 {
     public async Task<Result<List<TaskResponse>>> Handle(GetTasksWithBoardQuery request, CancellationToken cancellationToken)
     {
+        Project? project = await context.Projects
+            .Include(x => x.Workspace)
+            .AsNoTracking()
+            .SingleOrDefaultAsync(x => x.Id == request.ProjectId, cancellationToken);
+        if (project is null)
+        {
+            return Result.Failure<List<TaskResponse>>(ProjectErrors.NotFound(request.ProjectId));
+        }
+
+        bool hasAccess = await userAccess.IsAuthenticatedAsync(project.Workspace.Id);
+        if (!hasAccess)
+        {
+            return Result.Failure<List<TaskResponse>>(ProjectErrors.NotFound(request.ProjectId));
+        }
+
         return await context.Tasks
                .Include(x => x.Board)
                .Where(x => x.Board.ProjectId == request.ProjectId)
@@ -18,7 +34,7 @@ internal sealed class GetTasksWithBoardQueryHandler(IApplicationDbContext contex
                {
                    BoardId = x.BoardId,
                    BoardName = x.Board.Name,
-                   DeadLine = x.DeadLine.GetValueOrDefault().ToString(new CultureInfo("en-US")),
+                   DeadLine = x.DeadLine.ToString(),
                    Name = x.Name,
                    Id = x.Id,
                    IsComplete = x.IsComplete,

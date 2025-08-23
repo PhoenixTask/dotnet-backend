@@ -2,7 +2,6 @@
 using Application.Abstractions.Messaging;
 using Application.Users.Access;
 using Application.Workspaces.Get;
-using Domain.Subscriptions;
 using Domain.Workspaces;
 using Microsoft.EntityFrameworkCore;
 using SharedKernel;
@@ -20,7 +19,7 @@ internal sealed class GetWorkspaceByIdQueryHandler(IUserAccess userAccess, IAppl
             .Select(x => new WorkspaceResponse(x.Workspace.Id, x.Workspace.Name, x.Workspace.Color))
             .SingleOrDefaultAsync(cancellationToken);
 
-        bool hasAccess = await userAccess.IsAuthenticatedAsync(request.WorkspaceId, Role.Owner);
+        bool hasAccess = await userAccess.IsAuthenticatedAsync(request.WorkspaceId);
 
         if (workspace is null || !hasAccess)
         {

@@ -2,4 +2,4 @@
 
 
 namespace Application.Tasks.SwitchBoard;
-public sealed record SwitchBoardCommand(Guid TaskId,Guid BoardId) : ICommand;
+public sealed record SwitchBoardCommand(Guid TaskId, Guid BoardId) : ICommand;

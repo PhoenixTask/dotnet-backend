@@ -15,9 +15,10 @@ internal sealed class RefreshTokenCommnadHandler(
     public async Task<Result<LoginResponse>> Handle(RefreshTokenCommnad request, CancellationToken cancellationToken)
     {
         UserToken? refreshToken = await context.RefreshTokens
-            .Include(x=>x.User)
-            .SingleOrDefaultAsync(x=>x.UserId == request.UserId && x.Token == request.RefreshToken && x.TokenType == TokenType.RefreshToken,cancellationToken);
-        if(refreshToken is null)
+            .Include(x => x.User)
+            .SingleOrDefaultAsync(x => x.UserId == request.UserId && x.Token == request.RefreshToken
+            && x.TokenType == TokenType.RefreshToken, cancellationToken);
+        if (refreshToken is null)
         {
             return Result.Failure<LoginResponse>(UserErrors.InvalidToken);
         }
@@ -29,13 +30,13 @@ internal sealed class RefreshTokenCommnadHandler(
 
         string token = tokenProvider.Create(refreshToken.User);
         string refresh = tokenProvider.GenerateRefreshToken();
-        
+
         refreshToken.Token = refresh;
         refreshToken.ExpireOnUtc = DateTime.UtcNow.AddDays(7);
 
         await context.SaveChangesAsync(cancellationToken);
 
-        var response = new LoginResponse { RefreshToken = refresh, Token = token, UserId = refreshToken.User.Id };
+        var response = new LoginResponse(refreshToken.User.Id, token, refresh);
         return response;
     }
 }
