@@ -1,22 +1,28 @@
-﻿using Application.Abstractions.Authentication;
-using Application.Abstractions.Data;
+﻿using Application.Abstractions.Data;
 using Application.Abstractions.Messaging;
+using Application.Users.Access;
 using Domain.Projects;
+using Domain.Subscriptions;
 using Microsoft.EntityFrameworkCore;
 using SharedKernel;
 
 namespace Application.Boards.Create;
 
 internal sealed class CreateBoardCommandHandler(
-    IApplicationDbContext context, IUserContext userContext) : ICommandHandler<CreateBoardCommand, Guid>
+    IApplicationDbContext context, IUserAccess userAccess) : ICommandHandler<CreateBoardCommand, Guid>
 {
     public async Task<Result<Guid>> Handle(CreateBoardCommand request, CancellationToken cancellationToken)
     {
-        Guid userId = userContext.UserId;
         Project? project = await context.Projects
-            .SingleOrDefaultAsync(x => x.Id == request.ProjectId && x.CreatedById == userId, cancellationToken: cancellationToken);
+            .Include(x => x.Workspace)
+            .SingleOrDefaultAsync(x => x.Id == request.ProjectId, cancellationToken: cancellationToken);
 
         if (project is null)
+        {
+            return Result.Failure<Guid>(ProjectErrors.NotFound(request.ProjectId));
+        }
+        bool hasAccess = await userAccess.IsAuthenticatedAsync(project.Workspace.Id, Role.Owner);
+        if (hasAccess)
         {
             return Result.Failure<Guid>(ProjectErrors.NotFound(request.ProjectId));
         }

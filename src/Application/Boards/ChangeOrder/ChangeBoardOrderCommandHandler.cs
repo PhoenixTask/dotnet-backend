@@ -1,25 +1,32 @@
-﻿using Application.Abstractions.Authentication;
-using Application.Abstractions.Data;
+﻿using Application.Abstractions.Data;
 using Application.Abstractions.Messaging;
+using Application.Users.Access;
 using Domain.Projects;
+using Domain.Subscriptions;
 using Microsoft.EntityFrameworkCore;
 using SharedKernel;
 
 namespace Application.Boards.ChangeOrder;
 
-internal sealed class ChangeBoardOrderCommandHandler(IApplicationDbContext context, IUserContext userContext) : ICommandHandler<ChangeBoardOrderCommand>
+internal sealed class ChangeBoardOrderCommandHandler(IApplicationDbContext context, IUserAccess userAccess) : ICommandHandler<ChangeBoardOrderCommand>
 {
     public async Task<Result> Handle(ChangeBoardOrderCommand request, CancellationToken cancellationToken)
     {
-        Guid userId = userContext.UserId;
         Board? board = await context.Boards
-            .SingleOrDefaultAsync(x => x.Id == request.BoardId && x.CreatedById == userId, cancellationToken);
+            .Include(x => x.Project)
+            .ThenInclude(x => x.Workspace)
+            .SingleOrDefaultAsync(x => x.Id == request.BoardId, cancellationToken);
 
         if (board is null)
         {
             return Result.Failure(BoardErrors.NotFound(request.BoardId));
         }
 
+        bool hasAccess = await userAccess.IsAuthenticatedAsync(board.Project.Workspace.Id, Role.Owner);
+        if (hasAccess)
+        {
+            return Result.Failure(BoardErrors.NotFound(request.BoardId));
+        }
 
         List<Board> boards = await context.Boards
             .Where(x => x.ProjectId == board.ProjectId && x.Id != board.Id)

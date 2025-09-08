@@ -1,20 +1,27 @@
 ﻿using Application.Abstractions.Data;
 using Application.Abstractions.Messaging;
 using Application.Boards.Get;
+using Application.Users.Access;
 using Domain.Projects;
 using Microsoft.EntityFrameworkCore;
 using SharedKernel;
 
 namespace Application.Boards.GetById;
 
-internal sealed class GetBoardByIdQueryHandler(IApplicationDbContext context) : IQueryHandler<GetBoardByIdQuery, BoardResponse>
+internal sealed class GetBoardByIdQueryHandler(IApplicationDbContext context, IUserAccess userAccess) : IQueryHandler<GetBoardByIdQuery, BoardResponse>
 {
     public async Task<Result<BoardResponse>> Handle(GetBoardByIdQuery request, CancellationToken cancellationToken)
     {
-        bool boardExists = await context.Boards
-           .AnyAsync(x => x.Id == request.BoardId, cancellationToken);
+        Guid workspaceId = await context.Boards
+              .AsNoTracking()
+              .Include(x => x.Project)
+              .ThenInclude(x => x.Workspace)
+              .Where(x => x.Id == request.BoardId)
+              .Select(x => x.Project.Workspace.Id)
+        .SingleOrDefaultAsync(cancellationToken);
 
-        if (!boardExists)
+        bool hasAccess = await userAccess.IsAuthenticatedAsync(workspaceId);
+        if (hasAccess)
         {
             return Result.Failure<BoardResponse>(BoardErrors.NotFound(request.BoardId));
         }

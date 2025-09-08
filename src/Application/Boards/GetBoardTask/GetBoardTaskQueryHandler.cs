@@ -2,20 +2,26 @@
 using Application.Abstractions.Data;
 using Application.Abstractions.Messaging;
 using Application.Common;
+using Application.Users.Access;
 using Domain.Projects;
 using Microsoft.EntityFrameworkCore;
 using SharedKernel;
 
 namespace Application.Boards.GetBoardTask;
 
-internal sealed class GetBoardTaskQueryHandler(IApplicationDbContext context) : IQueryHandler<GetBoardTaskQuery, PaginatedResponse<BoardResponse>>
+internal sealed class GetBoardTaskQueryHandler(IApplicationDbContext context, IUserAccess userAccess) : IQueryHandler<GetBoardTaskQuery, PaginatedResponse<BoardResponse>>
 {
     public async Task<Result<PaginatedResponse<BoardResponse>>> Handle(GetBoardTaskQuery request, CancellationToken cancellationToken)
     {
-        bool projectExist = await context.Projects
-            .AnyAsync(x => x.Id == request.ProjectId, cancellationToken);
+        Guid workspaceId = await context.Projects
+             .AsNoTracking()
+             .Include(x => x.Workspace)
+             .Where(x => x.Id == request.ProjectId)
+             .Select(x => x.Workspace.Id)
+             .SingleOrDefaultAsync(cancellationToken);
 
-        if (!projectExist)
+        bool hasAccess = await userAccess.IsAuthenticatedAsync(workspaceId);
+        if (hasAccess)
         {
             return Result.Failure<PaginatedResponse<BoardResponse>>(ProjectErrors.NotFound(request.ProjectId));
         }

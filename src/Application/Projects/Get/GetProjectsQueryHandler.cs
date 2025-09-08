@@ -1,7 +1,6 @@
-﻿using Application.Abstractions.Authentication;
-using Application.Abstractions.Data;
+﻿using Application.Abstractions.Data;
 using Application.Abstractions.Messaging;
-using Domain.Projects;
+using Application.Users.Access;
 using Domain.Workspaces;
 using Microsoft.EntityFrameworkCore;
 using SharedKernel;
@@ -9,29 +8,20 @@ using SharedKernel;
 namespace Application.Projects.Get;
 
 internal sealed class GetProjectsQueryHandler(
-    IApplicationDbContext context, IUserContext userContext) : IQueryHandler<GetProjectsQuery, List<ProjectResponse>>
+    IApplicationDbContext context, IUserAccess userAccess) : IQueryHandler<GetProjectsQuery, List<ProjectResponse>>
 {
     public async Task<Result<List<ProjectResponse>>> Handle(GetProjectsQuery request, CancellationToken cancellationToken)
     {
-        Guid userId = userContext.UserId;
-
-        bool projectExist = await context.Workspaces
-            .AnyAsync(x => x.Id == request.WorkspaceId && x.CreatedById == userId, cancellationToken);
-
-        if (!projectExist)
+        bool hasAccess = await userAccess.IsAuthenticatedAsync(request.WorkspaceId);
+        if (hasAccess)
         {
             return Result.Failure<List<ProjectResponse>>(WorkspaceErrors.NotFound(request.WorkspaceId));
         }
 
         List<ProjectResponse> projects = await context.Projects
             .AsNoTracking()
-            .Where(x => x.Workspace.Id == request.WorkspaceId && x.CreatedById == userId)
-            .Select(x => new ProjectResponse
-            {
-                Id = x.Id,
-                Name = x.Name,
-                Color = x.Color
-            }).ToListAsync(cancellationToken);
+            .Where(x => x.Workspace.Id == request.WorkspaceId)
+            .Select(x => new ProjectResponse(x.Id, x.Name, x.Color)).ToListAsync(cancellationToken);
 
         return projects;
     }

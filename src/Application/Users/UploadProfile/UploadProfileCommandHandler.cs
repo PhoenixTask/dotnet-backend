@@ -7,7 +7,8 @@ using SharedKernel;
 
 namespace Application.Users.UploadProfile;
 
-internal sealed class UploadProfileCommandHandler(IApplicationDbContext context, IUserContext userContext) : ICommandHandler<UploadProfileCommand>
+internal sealed class UploadProfileCommandHandler(IApplicationDbContext context, IUserContext userContext)
+    : ICommandHandler<UploadProfileCommand>
 {
     public async Task<Result> Handle(UploadProfileCommand request, CancellationToken cancellationToken)
     {
