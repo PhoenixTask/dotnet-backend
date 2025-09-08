@@ -7,13 +7,13 @@ using SharedKernel;
 
 namespace Application.Users.Login;
 
-internal sealed class LoginWithUsernameCommandHandler(
+internal sealed class LoginCommandHandler(
     IApplicationDbContext context,
     IPasswordHasher passwordHasher,
     ITokenProvider tokenProvider
-    ) : ICommandHandler<LoginWithUsernameCommand, LoginResponse>
+    ) : ICommandHandler<LoginCommand, LoginResponse>
 {
-    public async Task<Result<LoginResponse>> Handle(LoginWithUsernameCommand request, CancellationToken cancellationToken)
+    public async Task<Result<LoginResponse>> Handle(LoginCommand request, CancellationToken cancellationToken)
     {
         string normalizedUserName = request.Username.ToUpperInvariant();
 

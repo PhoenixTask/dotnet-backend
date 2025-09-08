@@ -1,9 +1,9 @@
 ﻿using FluentValidation;
 
 namespace Application.Users.Login;
-internal sealed class LoginWithUsernameCommandValidator : AbstractValidator<LoginWithUsernameCommand>
+internal sealed class LoginCommandValidator : AbstractValidator<LoginCommand>
 {
-    public LoginWithUsernameCommandValidator()
+    public LoginCommandValidator()
     {
         RuleFor(u => u.Username).NotEmpty();
         RuleFor(u => u.Password).NotEmpty();

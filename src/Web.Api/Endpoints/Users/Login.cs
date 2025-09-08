@@ -14,19 +14,24 @@ internal sealed class Login : IEndpoint
     {
         app.MapPost("user/login", async (Request request, ISender sender, CancellationToken cancellationToken) =>
         {
-            var command = new LoginUserCommand(request.Username, request.Password);
+            var command = new LoginCommand(request.Username, request.Password);
 
-            Result<string> result = await sender.Send(command, cancellationToken);
+            Result<LoginResponse> result = await sender.Send(command, cancellationToken);
 
-            return result.Match(Results.Ok, CustomResults.Problem);
+            if (result.IsFailure)
+            {
+                return CustomResults.Problem(result);
+            }
+            return Results.Ok(result.Value.Token);
         })
         .WithName("Login User")
         .WithSummary("Authenticate user with username and password")
+        .HasDeprecatedApiVersion(1)
         .WithTags(Tags.Users);
 
         app.MapPost("user/login", async (Request request, ISender sender, CancellationToken cancellationToken) =>
         {
-            var command = new LoginWithUsernameCommand(request.Username, request.Password);
+            var command = new LoginCommand(request.Username, request.Password);
 
             Result<LoginResponse> result = await sender.Send(command, cancellationToken);
 

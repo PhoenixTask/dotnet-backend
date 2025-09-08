@@ -1,4 +1,4 @@
 ﻿using Application.Abstractions.Messaging;
 
 namespace Application.Users.Login;
-public sealed record LoginWithUsernameCommand(string Username, string Password) : ICommand<LoginResponse>;
+public sealed record LoginCommand(string Username, string Password) : ICommand<LoginResponse>;
