@@ -12,11 +12,17 @@ internal sealed class UserConfiguration : CommonEntityConfiguration<User>
 
         builder.HasIndex(u => u.Email).IsUnique();
 
-        builder.Property(u=>u.UserName).IsRequired();
+        builder.Property(u => u.UserName).IsRequired();
 
         builder.HasIndex(u => u.NormalizedUserName);
 
         builder.Property(u => u.ProfileImage).IsRequired(false);
+
+        builder.Property(u => u.AuthProvider).IsRequired()
+            .HasDefaultValue(AuthProvider.Internal);
+
+        builder.Property(x => x.PasswordHash)
+            .IsRequired(false);
 
         base.Configure(builder);
     }
