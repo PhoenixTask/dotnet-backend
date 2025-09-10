@@ -21,15 +21,28 @@ public record Error
 
     public ErrorType Type { get; }
 
-    public static Error Failure(string code, string description) =>
-        new(code, description, ErrorType.Failure);
+    public static Error Failure(string code, string description)
+    {
+        return new(code, description, ErrorType.Failure);
+    }
 
-    public static Error NotFound(string code, string description) =>
-        new(code, description, ErrorType.NotFound);
+    public static Error NotFound(string code, string description)
+    {
+        return new(code, description, ErrorType.NotFound);
+    }
 
-    public static Error Problem(string code, string description) =>
-        new(code, description, ErrorType.Problem);
+    public static Error Problem(string code, string description)
+    {
+        return new(code, description, ErrorType.Problem);
+    }
 
-    public static Error Conflict(string code, string description) =>
-        new(code, description, ErrorType.Conflict);
+    public static Error Conflict(string code, string description)
+    {
+        return new(code, description, ErrorType.Conflict);
+    }
+
+    public static Error Unauthorize(string code, string description)
+    {
+        return new(code, description, ErrorType.NotAuthorize);
+    }
 }
