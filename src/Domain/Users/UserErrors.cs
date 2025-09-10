@@ -4,11 +4,14 @@ namespace Domain.Users;
 
 public static class UserErrors
 {
-    public static Error NotFound(Guid userId) => Error.NotFound(
+    public static Error NotFound(Guid userId)
+    {
+        return Error.NotFound(
         "Users.NotFound",
         $"The user with the Id = '{userId}' was not found");
+    }
 
-    public static Error Unauthorized() => Error.Failure(
+    public static readonly Error Unauthorized = Error.Unauthorize(
         "Users.Unauthorized",
         "You are not authorized to perform this action.");
 
