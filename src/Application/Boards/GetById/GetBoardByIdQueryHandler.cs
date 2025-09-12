@@ -21,7 +21,7 @@ internal sealed class GetBoardByIdQueryHandler(IApplicationDbContext context, IU
         .SingleOrDefaultAsync(cancellationToken);
 
         bool hasAccess = await userAccess.IsAuthenticatedAsync(workspaceId);
-        if (hasAccess)
+        if (!hasAccess)
         {
             return Result.Failure<BoardResponse>(BoardErrors.NotFound(request.BoardId));
         }

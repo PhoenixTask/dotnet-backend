@@ -24,7 +24,7 @@ internal sealed class DeleteBoardCommandHandler(
             return Result.Failure(BoardErrors.NotFound(request.boardId));
         }
         bool hasAccess = await userAccess.IsAuthenticatedAsync(board.Project.Workspace.Id, Role.Owner);
-        if (hasAccess)
+        if (!hasAccess)
         {
             return Result.Failure(BoardErrors.NotFound(request.boardId));
         }

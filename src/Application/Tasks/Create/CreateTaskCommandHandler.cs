@@ -24,7 +24,7 @@ internal sealed class CreateTaskCommandHandler(
         }
 
         bool hasAccess = await userAccess.IsAuthenticatedAsync(board.Project.Workspace.Id);
-        if (hasAccess)
+        if (!hasAccess)
         {
             return Result.Failure<Guid>(BoardErrors.NotFound(request.BoardId));
         }

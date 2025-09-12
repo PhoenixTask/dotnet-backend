@@ -22,7 +22,7 @@ internal sealed class UpdateBoardCommandHandler(
             return Result.Failure(BoardErrors.NotFound(request.BoardId));
         }
         bool hasAccess = await userAccess.IsAuthenticatedAsync(board.Project.Workspace.Id);
-        if (hasAccess)
+        if (!hasAccess)
         {
             return Result.Failure(BoardErrors.NotFound(request.BoardId));
         }
