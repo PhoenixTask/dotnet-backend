@@ -26,7 +26,7 @@ internal sealed class ChangeTaskOrderCommandHandler
         }
 
         bool hasAccess = await userAccess.IsAuthenticatedAsync(task.Board.Project.Workspace.Id);
-        if (hasAccess)
+        if (!hasAccess)
         {
             return Result.Failure(TaskErrors.NotFound(request.TaskId));
         }
