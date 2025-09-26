@@ -84,11 +84,19 @@ public static class DependencyInjection
                     ValidAudience = configuration["Jwt:Audience"],
                     ClockSkew = TimeSpan.Zero
                 };
-            })
-            .AddCookie(o =>
-            {
-                o.Cookie.HttpOnly = true;
-                o.ExpireTimeSpan = TimeSpan.FromMinutes(10);
+
+                o.Events = new JwtBearerEvents
+                {
+                    OnMessageReceived = ctx =>
+                    {
+                        ctx.Request.Cookies.TryGetValue("access", out string? access);
+                        if (!string.IsNullOrEmpty(access))
+                        {
+                            ctx.Token = access;
+                        }
+                        return Task.CompletedTask;
+                    }
+                };
             });
 
         services.AddHttpContextAccessor();
