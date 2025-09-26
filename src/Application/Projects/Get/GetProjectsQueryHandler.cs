@@ -13,7 +13,7 @@ internal sealed class GetProjectsQueryHandler(
     public async Task<Result<List<ProjectResponse>>> Handle(GetProjectsQuery request, CancellationToken cancellationToken)
     {
         bool hasAccess = await userAccess.IsAuthenticatedAsync(request.WorkspaceId);
-        if (hasAccess)
+        if (!hasAccess)
         {
             return Result.Failure<List<ProjectResponse>>(WorkspaceErrors.NotFound(request.WorkspaceId));
         }

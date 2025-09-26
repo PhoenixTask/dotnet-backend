@@ -23,5 +23,24 @@ internal sealed class GoogleLogin : IEndpoint
        .WithName("Login User By Google Provider")
        .WithSummary("Authenticate user with google")
        .WithTags(Tags.Users);
+
+
+        app.MapPost("user/google-login", async (Request request, ISender sender, HttpContext context, CancellationToken cancellationToken) =>
+        {
+            var command = new LoginGoogleCommand(request.TokenId);
+
+            Result<LoginResponse> result = await sender.Send(command, cancellationToken);
+
+            if (result.IsFailure)
+            {
+                return CustomResults.Problem(result);
+            }
+            CookieService.SetToken(result.Value.Token, result.Value.RefreshToken, context);
+            return Results.NoContent();
+        })
+            .HasApiVersion(2)
+      .WithName("Login User By Google Provider (http only cookie)")
+      .WithSummary("Authenticate user with google")
+      .WithTags(Tags.Users);
     }
 }
