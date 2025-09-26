@@ -24,7 +24,7 @@ internal sealed class DeleteCommentCommandHandler
             return Result.Failure(CommentErrors.NotFound(request.CommentId));
         }
         bool hasAccess = await userAccess.IsAuthenticatedAsync(comment.Task.Board.Project.Workspace.Id);
-        if (hasAccess)
+        if (!hasAccess)
         {
             return Result.Failure(CommentErrors.NotFound(request.CommentId));
         }

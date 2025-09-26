@@ -26,7 +26,7 @@ internal sealed class DeleteProjectCommandHandler(
         }
 
         bool hasAccess = await userAccess.IsAuthenticatedAsync(project.Workspace.Id);
-        if (hasAccess)
+        if (!hasAccess)
         {
             return Result.Failure(ProjectErrors.NotFound(request.ProjectId));
         }

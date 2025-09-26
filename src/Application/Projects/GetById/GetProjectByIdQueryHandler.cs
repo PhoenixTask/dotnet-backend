@@ -23,7 +23,7 @@ internal sealed class GetProjectByIdQueryHandler(IApplicationDbContext context, 
         }
 
         bool hasAccess = await userAccess.IsAuthenticatedAsync(project.Workspace.Id);
-        if (hasAccess)
+        if (!hasAccess)
         {
             return Result.Failure<ProjectResponse>(ProjectErrors.NotFound(request.ProjectId));
         }
