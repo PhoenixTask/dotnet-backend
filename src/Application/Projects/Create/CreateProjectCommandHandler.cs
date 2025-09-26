@@ -21,7 +21,7 @@ internal sealed class CreateProjectCommandHandler
         }
 
         bool hasAccess = await userAccess.IsAuthenticatedAsync(workspace.Id);
-        if (hasAccess)
+        if (!hasAccess)
         {
             return Result.Failure<Guid>(WorkspaceErrors.NotFound(request.WorkspaceId));
         }
