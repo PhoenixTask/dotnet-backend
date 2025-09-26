@@ -22,7 +22,7 @@ internal sealed class GetTaskCommentsQueryHandler
             .SingleOrDefaultAsync(cancellationToken);
 
         bool hasAccess = await userAccess.IsAuthenticatedAsync(workspaceId);
-        if (hasAccess)
+        if (!hasAccess)
         {
             return Result.Failure<List<CommentResponse>>(TaskErrors.NotFound(request.TaskId));
         }
