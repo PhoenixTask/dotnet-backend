@@ -20,7 +20,7 @@ internal sealed class GetBoardsQueryHandler(
             .SingleOrDefaultAsync(cancellationToken);
 
         bool hasAccess = await userAccess.IsAuthenticatedAsync(workspaceId);
-        if (hasAccess)
+        if (!hasAccess)
         {
             return Result.Failure<List<BoardResponse>>(ProjectErrors.NotFound(request.ProjectId));
         }
