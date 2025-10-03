@@ -26,7 +26,7 @@ internal sealed class LoginCommandHandler(
             return Result.Failure<LoginResponse>(UserErrors.NotFoundByUserName);
         }
 
-        bool verified = passwordHasher.Verify(request.Password, user.PasswordHash ?? string.Empty);
+        bool verified = passwordHasher.Verify(request.Password, user.PasswordHash ?? "-");
 
         if (!verified)
         {
