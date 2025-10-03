@@ -10,9 +10,9 @@ internal sealed class GetByDate : IEndpoint
 {
     public void MapEndpoint(IEndpointRouteBuilder app)
     {
-        app.MapGet("task/get-by-deadline", async (Guid ProjectId, DateTime Start, DateTime End, ISender sender, CancellationToken cancellationToken) =>
+        app.MapGet("task/get-by-deadline", async (Guid ProjectId, DateTime Start, DateTime End, ISender sender, CancellationToken cancellationToken, bool IncludeCompleted = true) =>
         {
-            var query = new GetTaskByDeadLineQuery(ProjectId, Start, End);
+            var query = new GetTaskByDeadLineQuery(ProjectId, Start, End, IncludeCompleted);
 
             Result<List<TaskResponse>> result = await sender.Send(query, cancellationToken);
 

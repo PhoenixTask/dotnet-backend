@@ -26,12 +26,20 @@ internal sealed class GetTaskByDeadLineQueryHandler(IApplicationDbContext contex
         {
             return Result.Failure<List<TaskResponse>>(ProjectErrors.NotFound(request.ProjectId));
         }
-        return await context.Tasks
+        IQueryable<Domain.Tasks.Task> taskQuery = context.Tasks
             .AsNoTracking()
             .Include(x => x.Board)
             .Where(x => x.Board.ProjectId == request.ProjectId)
             .Where(x => x.DeadLine >= DateOnly.FromDateTime(request.StartDate))
-            .Where(x => x.DeadLine <= DateOnly.FromDateTime(request.EndDate))
+            .Where(x => x.DeadLine <= DateOnly.FromDateTime(request.EndDate));
+
+        if (!request.IncludeCompleted)
+        {
+            taskQuery = taskQuery
+                .Where(x => !x.IsComplete);
+        }
+
+        return await taskQuery
             .Select(x => new TaskResponse
             {
                 DeadLine = x.DeadLine.ToString(),
