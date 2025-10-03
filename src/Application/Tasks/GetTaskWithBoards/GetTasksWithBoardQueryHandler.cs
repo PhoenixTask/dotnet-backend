@@ -26,10 +26,15 @@ internal sealed class GetTasksWithBoardQueryHandler(IApplicationDbContext contex
         {
             return Result.Failure<List<TaskResponse>>(ProjectErrors.NotFound(request.ProjectId));
         }
-
-        return await context.Tasks
+        IQueryable<Domain.Tasks.Task> taskQuery = context.Tasks
                .Include(x => x.Board)
-               .Where(x => x.Board.ProjectId == request.ProjectId)
+               .Where(x => x.Board.ProjectId == request.ProjectId);
+        if (!request.IncludeCompleted)
+        {
+            taskQuery = taskQuery
+                .Where(x => !x.IsComplete);
+        }
+        return await taskQuery
                .Select(x => new TaskResponse
                {
                    BoardId = x.BoardId,

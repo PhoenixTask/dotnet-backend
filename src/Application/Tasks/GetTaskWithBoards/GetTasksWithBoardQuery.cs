@@ -2,4 +2,4 @@
 using Application.Tasks.GetTaskByDate;
 
 namespace Application.Tasks.GetTaskWithBoards;
-public sealed record GetTasksWithBoardQuery(Guid ProjectId) : IQuery<List<TaskResponse>>;
+public sealed record GetTasksWithBoardQuery(Guid ProjectId, bool IncludeCompleted) : IQuery<List<TaskResponse>>;
