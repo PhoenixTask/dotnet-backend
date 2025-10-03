@@ -33,6 +33,7 @@ builder.Services.AddCors(options =>
     policy.WithOrigins(frontAddress)
     .AllowAnyHeader()
     .AllowAnyMethod()
+    .AllowCredentials()
 ));
 
 builder.Services.AddApiVersioning(options =>
@@ -81,11 +82,11 @@ app.UseSerilogRequestLogging();
 
 app.UseExceptionHandler();
 
+app.UseCors("AllowFrontEndServer");
+
 app.UseAuthentication();
 
 app.UseAuthorization();
-
-app.UseCors("AllowFrontEndServer");
 
 await app.RunAsync();
 
