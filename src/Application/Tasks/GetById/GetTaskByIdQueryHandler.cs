@@ -12,7 +12,11 @@ internal sealed class GetTaskByIdQueryHandler(IApplicationDbContext context, IUs
 {
     public async Task<Result<TaskResponse>> Handle(GetTaskByIdQuery request, CancellationToken cancellationToken)
     {
-        Task? task = await context.Tasks.SingleOrDefaultAsync(x => x.Id == request.TaskId, cancellationToken);
+        Task? task = await context.Tasks
+            .Include(x => x.Board)
+            .ThenInclude(x => x.Project)
+            .ThenInclude(x => x.Workspace)
+            .SingleOrDefaultAsync(x => x.Id == request.TaskId, cancellationToken);
         if (task is null)
         {
             return Result.Failure<TaskResponse>(TaskErrors.NotFound(request.TaskId));
