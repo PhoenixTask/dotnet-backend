@@ -7,14 +7,14 @@ internal class GoogleProvider(IConfiguration configuration) : IGoogleProvider
 {
     public async Task<Dictionary<string, string>?> GetClaimsAsync(string accessToken, CancellationToken cancellationToken)
     {
-        //try
-        //{
-        GoogleJsonWebSignature.Payload payload = await GoogleJsonWebSignature.ValidateAsync(accessToken,
-     new GoogleJsonWebSignature.ValidationSettings
-     {
-         Audience = [configuration["Google:ClientId"]]
-     });
-        var result = new Dictionary<string, string>
+        try
+        {
+            GoogleJsonWebSignature.Payload payload = await GoogleJsonWebSignature.ValidateAsync(accessToken,
+         new GoogleJsonWebSignature.ValidationSettings
+         {
+             Audience = [configuration["Google:ClientId"]]
+         });
+            var result = new Dictionary<string, string>
         {
             { "Scope", payload.Scope },
             { "Prn", payload.Prn },
@@ -26,12 +26,11 @@ internal class GoogleProvider(IConfiguration configuration) : IGoogleProvider
             { "Picture", payload.Picture },
             { "Locale", payload.Locale }
         };
-        return result;
-        //}
-        //catch (InvalidJwtException exception)
-        //{
-        //    throw exception;
-        //    return null;
-        //}
+            return result;
+        }
+        catch (InvalidJwtException)
+        {
+            return null;
+        }
     }
 }
