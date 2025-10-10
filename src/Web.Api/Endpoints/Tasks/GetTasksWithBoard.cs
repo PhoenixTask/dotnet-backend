@@ -11,9 +11,9 @@ internal sealed class GetTasksWithBoard : IEndpoint
 {
     public void MapEndpoint(IEndpointRouteBuilder app)
     {
-        app.MapGet("task/tasks-with-board", async (Guid ProjectId, ISender sender, CancellationToken cancellationToken, bool IncludeCompled = true) =>
+        app.MapGet("task/tasks-with-board", async (Guid ProjectId, ISender sender, CancellationToken cancellationToken, bool IncludeCompleted = true) =>
         {
-            var query = new GetTasksWithBoardQuery(ProjectId, IncludeCompled);
+            var query = new GetTasksWithBoardQuery(ProjectId, IncludeCompleted);
 
             Result<List<TaskResponse>> result = await sender.Send(query, cancellationToken);
 
