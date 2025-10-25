@@ -25,12 +25,11 @@ builder.Services
 builder.Services.AddTransient<IContentTypeProvider, FileExtensionContentTypeProvider>();
 builder.Services.AddEndpoints(Assembly.GetExecutingAssembly());
 
-string frontAddress = builder.Configuration.GetSection("FrontEnd")
-    .GetValue("Address", "http://localhost:3000");
+string[] frontAddress = builder.Configuration.GetSection("FrontEnd").GetSection("Addresses").Get<string[]>();
 
 builder.Services.AddCors(options =>
     options.AddPolicy("AllowFrontEndServer", policy =>
-    policy.WithOrigins(frontAddress)
+    policy.WithOrigins([.. frontAddress])
     .AllowAnyHeader()
     .AllowAnyMethod()
     .AllowCredentials()
