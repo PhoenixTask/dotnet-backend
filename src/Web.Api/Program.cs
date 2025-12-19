@@ -1,3 +1,4 @@
+using System.Globalization;
 using System.Reflection;
 using Application;
 using Asp.Versioning;
@@ -29,7 +30,7 @@ string[] frontAddress = builder.Configuration.GetSection("FrontEnd").GetSection(
 
 builder.Services.AddCors(options =>
     options.AddPolicy("AllowFrontEndServer", policy =>
-    policy.WithOrigins([.. frontAddress])
+    policy.WithOrigins(frontAddress ?? [])
     .AllowAnyHeader()
     .AllowAnyMethod()
     .AllowCredentials()
@@ -49,7 +50,8 @@ builder.Services.AddApiVersioning(options =>
 });
 
 builder.Services.ConfigureOptions<ConfigureSwaggerGenOptions>();
-
+builder.Services.AddSingleton<IFormatProvider>(serviceProvider =>
+    CultureInfo.CurrentCulture);
 WebApplication app = builder.Build();
 
 ApiVersionSet apiVersionSet = app.NewApiVersionSet()
