@@ -1,4 +1,5 @@
-﻿using Application.Abstractions.Data;
+﻿using System;
+using Application.Abstractions.Data;
 using Application.Abstractions.Messaging;
 using Application.Boards.GetBoardTask;
 using Application.Users.Access;
@@ -10,7 +11,8 @@ namespace Application.Tasks.Search;
 
 internal sealed class SearchTaskByProjectQueryHandler(
     IApplicationDbContext context,
-    IUserAccess userAccess
+    IUserAccess userAccess,
+    IFormatProvider formatProvider
 ) : IQueryHandler<SearchTaskByProjectQuery, List<BoardResponse>>
 {
     public async Task<Result<List<BoardResponse>>> Handle(SearchTaskByProjectQuery request, CancellationToken cancellationToken)
@@ -50,7 +52,7 @@ internal sealed class SearchTaskByProjectQueryHandler(
                     .Select(t => new TaskResponse
                     {
                         Id = t.Id,
-                        DeadLine = t.DeadLine.ToString(),
+                        DeadLine = t.DeadLine.HasValue ? t.DeadLine.Value.ToString(formatProvider) : string.Empty,
                         Description = t.Description,
                         Name = t.Name,
                         Order = t.Order,

@@ -1,4 +1,5 @@
-﻿using Application.Abstractions.Data;
+﻿using System;
+using Application.Abstractions.Data;
 using Application.Abstractions.Messaging;
 using Application.Tasks.GetTaskByDate;
 using Application.Users.Access;
@@ -8,7 +9,7 @@ using SharedKernel;
 
 namespace Application.Tasks.GetTaskWithBoards;
 
-internal sealed class GetTasksWithBoardQueryHandler(IApplicationDbContext context, IUserAccess userAccess) : IQueryHandler<GetTasksWithBoardQuery, List<TaskResponse>>
+internal sealed class GetTasksWithBoardQueryHandler(IApplicationDbContext context, IUserAccess userAccess, IFormatProvider formatProvider) : IQueryHandler<GetTasksWithBoardQuery, List<TaskResponse>>
 {
     public async Task<Result<List<TaskResponse>>> Handle(GetTasksWithBoardQuery request, CancellationToken cancellationToken)
     {
@@ -39,7 +40,7 @@ internal sealed class GetTasksWithBoardQueryHandler(IApplicationDbContext contex
                {
                    BoardId = x.BoardId,
                    BoardName = x.Board.Name,
-                   DeadLine = x.DeadLine.ToString(),
+                   DeadLine = x.DeadLine.HasValue ? x.DeadLine.Value.ToString(formatProvider) : string.Empty,
                    Name = x.Name,
                    Id = x.Id,
                    IsComplete = x.IsComplete,

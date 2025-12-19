@@ -8,7 +8,7 @@ using SharedKernel;
 
 namespace Application.Tasks.GetTaskByDate;
 
-internal sealed class GetTaskByDeadLineQueryHandler(IApplicationDbContext context, IUserAccess userAccess) : IQueryHandler<GetTaskByDeadLineQuery, List<TaskResponse>>
+internal sealed class GetTaskByDeadLineQueryHandler(IApplicationDbContext context, IUserAccess userAccess,IFormatProvider formatProvider) : IQueryHandler<GetTaskByDeadLineQuery, List<TaskResponse>>
 {
     public async Task<Result<List<TaskResponse>>> Handle(GetTaskByDeadLineQuery request, CancellationToken cancellationToken)
     {
@@ -42,7 +42,7 @@ internal sealed class GetTaskByDeadLineQueryHandler(IApplicationDbContext contex
         return await taskQuery
             .Select(x => new TaskResponse
             {
-                DeadLine = x.DeadLine.ToString(),
+                DeadLine = x.DeadLine.HasValue ? x.DeadLine.Value.ToString(formatProvider):string.Empty,
                 Id = x.Id,
                 IsComplete = x.IsComplete,
                 Name = x.Name,

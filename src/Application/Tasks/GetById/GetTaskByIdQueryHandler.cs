@@ -8,7 +8,7 @@ using SharedKernel;
 using Task = Domain.Tasks.Task;
 namespace Application.Tasks.GetById;
 
-internal sealed class GetTaskByIdQueryHandler(IApplicationDbContext context, IUserAccess userAccess) : IQueryHandler<GetTaskByIdQuery, TaskResponse>
+internal sealed class GetTaskByIdQueryHandler(IApplicationDbContext context, IUserAccess userAccess,IFormatProvider formatProvider) : IQueryHandler<GetTaskByIdQuery, TaskResponse>
 {
     public async Task<Result<TaskResponse>> Handle(GetTaskByIdQuery request, CancellationToken cancellationToken)
     {
@@ -30,7 +30,7 @@ internal sealed class GetTaskByIdQueryHandler(IApplicationDbContext context, IUs
 
         return new TaskResponse
         {
-            DeadLine = task.DeadLine.ToString(),
+            DeadLine = task.DeadLine?.ToString(formatProvider),
             Description = task.Description,
             Id = request.TaskId,
             IsComplete = task.IsComplete,

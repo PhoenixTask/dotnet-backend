@@ -1,4 +1,5 @@
-﻿using Application.Abstractions.Authentication;
+﻿using System;
+using Application.Abstractions.Authentication;
 using Application.Abstractions.Data;
 using Application.Abstractions.Messaging;
 using Microsoft.EntityFrameworkCore;
@@ -6,7 +7,7 @@ using SharedKernel;
 
 namespace Application.Tasks.Get;
 
-internal sealed class GetTasksQueryHandler(IApplicationDbContext context, IUserContext userContext) : IQueryHandler<GetTasksQuery, List<TaskResponse>>
+internal sealed class GetTasksQueryHandler(IApplicationDbContext context, IUserContext userContext,IFormatProvider formatProvider) : IQueryHandler<GetTasksQuery, List<TaskResponse>>
 {
     public async Task<Result<List<TaskResponse>>> Handle(GetTasksQuery request, CancellationToken cancellationToken)
     {
@@ -24,7 +25,7 @@ internal sealed class GetTasksQueryHandler(IApplicationDbContext context, IUserC
             .Select(x => new TaskResponse
             {
                 Id = x.Id,
-                DeadLine = x.DeadLine.ToString(),
+                DeadLine = x.DeadLine.HasValue ? x.DeadLine.Value.ToString(formatProvider) : string.Empty,
                 Description = x.Description,
                 Name = x.Name,
                 Order = x.Order,
