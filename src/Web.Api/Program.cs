@@ -65,10 +65,10 @@ RouteGroupBuilder group = app
 
 app.MapEndpoints(group);
 
+app.UseSwaggerWithUi();
+
 if (app.Environment.IsDevelopment())
 {
-    app.UseSwaggerWithUi();
-
     app.ApplyMigrations();
 }
 
